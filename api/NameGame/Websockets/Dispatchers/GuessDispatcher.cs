@@ -20,6 +20,11 @@ public class GuessDispatcher(
     {
         this.Logger.LogInformation("Dispatching guess to {numclients} clients", this.Clients.Count);
 
+        if (this.Clients.IsEmpty)
+        {
+            return;
+        }
+
         var serialized = JsonSerializer.Serialize(request);
         var buffer = Encoding.UTF8.GetBytes(serialized);
 

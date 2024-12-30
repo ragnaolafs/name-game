@@ -4,7 +4,7 @@ namespace NameGame.Models.Requests;
 
 public class GuessRequest
 {
-    [JsonPropertyName("name")]
+    [JsonPropertyName("user")]
     public required string User { get; set; }
 
     [JsonPropertyName("guess")]

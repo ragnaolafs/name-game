@@ -1,3 +1,4 @@
+using NameGame.Data.Queues;
 using NameGame.Models.Requests;
 using NameGame.Websockets.Dispatchers;
 
@@ -5,12 +6,15 @@ namespace NameGame.Services;
 
 public class GuessingService(
     ILogger<GuessingService> logger,
-    IGuessDispatcher guessDispatcher)
+    IGuessDispatcher guessDispatcher,
+    IGuessQueue guessQueue)
     : IGuessingService
 {
     private ILogger<GuessingService> Logger { get; } = logger;
 
-    private IGuessDispatcher Dispatcher { get; } = guessDispatcher;
+    private IGuessDispatcher GuessDispatcher { get; } = guessDispatcher;
+
+    private IGuessQueue GuessQueue { get; } = guessQueue;
 
     public async Task SubmitGuessAsync(
         GuessRequest request,
@@ -18,6 +22,8 @@ public class GuessingService(
     {
         this.Logger.LogInformation("Receiving a new guess. {user} guessed: {guess}", request.User, request.Guess);
 
-        await this.Dispatcher.PublishGuessAsync(request, cancellationToken);
+        await this.GuessDispatcher.PublishGuessAsync(request, cancellationToken);
+
+        await this.GuessQueue.EnqueueGuessAsync(request, cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using NameGame.Data.Queues;
 using NameGame.Services;
 using NameGame.Websockets.Extensions;
 using NameGame.Websockets.Services;
@@ -10,6 +11,8 @@ builder.Services.AddControllers();
 
 builder.Services
     .AddSingleton<IGuessingService, GuessingService>()
+    .AddSingleton<IGuessQueue, GuessQueue>()
+    .AddHostedService<GameBackgroundService>()
     .AddScoped<IWebSocketService, WebsocketService>()
     .AddDispatchers();
 
