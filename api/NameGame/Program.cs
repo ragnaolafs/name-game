@@ -1,12 +1,17 @@
 using Microsoft.OpenApi.Models;
 using NameGame.Services;
+using NameGame.Websockets.Extensions;
+using NameGame.Websockets.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services for controllers
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton<IGuessingService, GuessingService>();
+builder.Services
+    .AddSingleton<IGuessingService, GuessingService>()
+    .AddScoped<IWebSocketService, WebsocketService>()
+    .AddDispatchers();
 
 builder.Services.AddLogging();
 
@@ -21,7 +26,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-
 // WebSocket options
 var webSocketOptions = new WebSocketOptions
 {
@@ -29,22 +33,6 @@ var webSocketOptions = new WebSocketOptions
 };
 
 app.UseWebSockets(webSocketOptions);
-
-// WebSocket endpoint for echoing submitted guesses
-app.Map("/ws/game/guesses", async context =>
-{
-    if (!context.WebSockets.IsWebSocketRequest)
-    {
-        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-        return;
-    }
-
-    using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
-    var guessService = context.RequestServices.GetRequiredService<IGuessingService>();
-
-    await guessService.ListenToGuessesAsync(webSocket, CancellationToken.None);
-});
 
 // Map controller routes
 app.MapControllers();

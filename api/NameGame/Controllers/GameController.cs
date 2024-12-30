@@ -16,7 +16,7 @@ public class GameController : ControllerBase
         [FromServices] IGuessingService guessingService,
         CancellationToken cancellationToken)
     {
-        await guessingService.AddGuessAsync(request, cancellationToken);
+        await guessingService.SubmitGuessAsync(request, cancellationToken);
 
         return Ok(new { });
     }
