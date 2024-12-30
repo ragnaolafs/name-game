@@ -28,7 +28,7 @@ public class GameController : ControllerBase
     {
         await guessingService.SubmitGuessAsync(request, cancellationToken);
 
-        return Ok(new { });
+        return this.Ok(new { });
     }
 
     [HttpPatch("{id}/start")]
