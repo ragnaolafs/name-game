@@ -29,13 +29,13 @@ public class WebsocketController(
     }
 
     [HttpGet("game/{id}/standings")]
-    public async Task SubscribeToStandingsAsync(string id)
+    public Task SubscribeToStandingsAsync(string id)
     {
         throw new NotImplementedException();
     }
 
     [HttpGet("game/{id}/status")]
-    public async Task SubscribeToGameStatusAsync(string id)
+    public Task SubscribeToGameStatusAsync(string id)
     {
         throw new NotImplementedException();
     }

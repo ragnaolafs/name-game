@@ -13,6 +13,7 @@ builder.Services
     .AddSingleton<IGuessingService, GuessingService>()
     .AddSingleton<IGuessQueue, GuessQueue>()
     .AddHostedService<GameBackgroundService>()
+    .AddScoped<IGameService, GameService>()
     .AddScoped<IWebSocketService, WebsocketService>()
     .AddDispatchers();
 

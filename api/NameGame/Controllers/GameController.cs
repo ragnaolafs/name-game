@@ -9,8 +9,18 @@ using NameGame.Services;
 [Route("api/game")]
 public class GameController : ControllerBase
 {
+    [HttpPost("")]
+    public async Task<IActionResult> CreateGameAsync(
+        [FromServices] IGameService gameService,
+        CancellationToken cancellationToken)
+    {
+        var game = await gameService.CreateGameAsync(cancellationToken);
+
+        return this.Ok(game);
+    }
+
     [HttpPost("{id}/guess")]
-    public async Task<IActionResult> SubmitGuess(
+    public async Task<IActionResult> SubmitGuessAsync(
         [FromRoute] string id,
         [FromBody] GuessRequest request,
         [FromServices] IGuessingService guessingService,
@@ -19,5 +29,16 @@ public class GameController : ControllerBase
         await guessingService.SubmitGuessAsync(request, cancellationToken);
 
         return Ok(new { });
+    }
+
+    [HttpPatch("{id}/start")]
+    public async Task<IActionResult> StartGameAsync(
+        [FromRoute] string id,
+        [FromServices] IGameService gameService,
+        CancellationToken cancellationToken)
+    {
+        await gameService.StartGameAsync(cancellationToken);
+
+        return this.Ok(new { });
     }
 }
