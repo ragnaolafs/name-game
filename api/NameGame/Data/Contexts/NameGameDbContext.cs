@@ -1,17 +1,29 @@
 using Microsoft.EntityFrameworkCore;
+using NameGame.Data.Configurations;
 using NameGame.Data.Entities;
 using NameGame.Data.Interfaces;
 using NameGame.Models;
 
 namespace NameGame.Data.Contexts;
 
-public class NameGameDbContext : DbContext
+public class NameGameDbContext(
+    DbContextOptions<NameGameDbContext> options)
+    : DbContext(options)
 {
     public DbSet<GameEntity> Games { get; set; }
 
     public DbSet<GuessEntity> Guesses { get; set; }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(GameConfiguration).Assembly);
+
+        base.OnModelCreating(modelBuilder);
+    }
+
+    public override Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default)
     {
         var addedOrModified = this.ChangeTracker
             .Entries()

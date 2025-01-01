@@ -1,15 +1,20 @@
+using Microsoft.EntityFrameworkCore;
 using NameGame.Application.Queues.Interfaces;
+using NameGame.Data.Contexts;
 
 namespace NameGame.Application.Services;
 
 public class GameBackgroundService(
     ILogger<GameBackgroundService> logger,
-    IGuessQueue guessQueue)
+    IGuessQueue guessQueue,
+    IDbContextFactory<NameGameDbContext> dbContextFactory)
     : BackgroundService
 {
     private ILogger<GameBackgroundService> Logger { get; } = logger;
 
     private IGuessQueue GuessQueue { get; } = guessQueue;
+
+    private NameGameDbContext NameGameDb = dbContextFactory.CreateDbContext();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

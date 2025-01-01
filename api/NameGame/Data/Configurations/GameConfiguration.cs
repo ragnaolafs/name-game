@@ -33,7 +33,8 @@ public class GameConfiguration : IEntityTypeConfiguration<GameEntity>
 
         builder
             .Property(g => g.Status)
-            .HasConversion(statusConverter);
+            .HasConversion(statusConverter)
+            .HasMaxLength(32);
 
         builder
             .HasMany(g => g.Guesses)
