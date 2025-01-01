@@ -1,8 +1,9 @@
-using NameGame.Data.Queues;
+using NameGame.Application.Queues.Interfaces;
+using NameGame.Application.Services.Interfaces;
 using NameGame.Models.Requests;
 using NameGame.Websockets.Dispatchers;
 
-namespace NameGame.Services;
+namespace NameGame.Application.Services;
 
 public class GuessingService(
     ILogger<GuessingService> logger,
@@ -20,10 +21,10 @@ public class GuessingService(
         GuessRequest request,
         CancellationToken cancellationToken)
     {
-        this.Logger.LogInformation("Receiving a new guess. {user} guessed: {guess}", request.User, request.Guess);
+        Logger.LogInformation("Receiving a new guess. {user} guessed: {guess}", request.User, request.Guess);
 
-        await this.GuessDispatcher.PublishGuessAsync(request, cancellationToken);
+        await GuessDispatcher.PublishGuessAsync(request, cancellationToken);
 
-        await this.GuessQueue.EnqueueGuessAsync(request, cancellationToken);
+        await GuessQueue.EnqueueGuessAsync(request, cancellationToken);
     }
 }

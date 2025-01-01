@@ -1,6 +1,6 @@
 using NameGame.Models.Requests;
 
-namespace NameGame.Services;
+namespace NameGame.Application.Services.Interfaces;
 
 public interface IGuessingService
 {

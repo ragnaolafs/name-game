@@ -1,27 +1,25 @@
 using Microsoft.OpenApi.Models;
-using NameGame.Data.Queues;
-using NameGame.Services;
+using NameGame.Application.Extensions;
+using NameGame.Data.Extensions;
 using NameGame.Websockets.Extensions;
-using NameGame.Websockets.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
 
 // Add services for controllers
-builder.Services.AddControllers();
+services.AddControllers();
 
-builder.Services
-    .AddSingleton<IGuessingService, GuessingService>()
-    .AddSingleton<IGuessQueue, GuessQueue>()
-    .AddHostedService<GameBackgroundService>()
-    .AddScoped<IGameService, GameService>()
-    .AddScoped<IWebSocketService, WebsocketService>()
-    .AddDispatchers();
+services
+    .AddGameServices()
+    .AddWebSocketServices()
+    .AddNameGameDatabase(configuration);
 
-builder.Services.AddLogging();
+services.AddLogging();
 
 // Add Swagger services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Name Game API",

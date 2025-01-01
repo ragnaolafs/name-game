@@ -1,6 +1,7 @@
+using NameGame.Application.Services.Interfaces;
 using NameGame.Models.Results;
 
-namespace NameGame.Services;
+namespace NameGame.Application.Services;
 
 public class GameService : IGameService
 {

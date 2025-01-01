@@ -1,6 +1,6 @@
 using NameGame.Models.Requests;
 
-namespace NameGame.Data.Queues;
+namespace NameGame.Application.Queues.Interfaces;
 
 public interface IGuessQueue
 {

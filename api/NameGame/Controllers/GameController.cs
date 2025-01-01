@@ -2,8 +2,8 @@ namespace NameGame.Controllers;
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using NameGame.Application.Services.Interfaces;
 using NameGame.Models.Requests;
-using NameGame.Services;
 
 [ApiController]
 [Route("api/game")]

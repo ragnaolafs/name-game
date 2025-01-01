@@ -1,8 +1,9 @@
 
 using System.Threading.Channels;
+using NameGame.Application.Queues.Interfaces;
 using NameGame.Models.Requests;
 
-namespace NameGame.Data.Queues;
+namespace NameGame.Application.Queues;
 
 public class GuessQueue() : IGuessQueue
 {

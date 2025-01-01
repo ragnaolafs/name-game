@@ -1,7 +1,6 @@
+using NameGame.Application.Queues.Interfaces;
 
-using NameGame.Data.Queues;
-
-namespace NameGame.Services;
+namespace NameGame.Application.Services;
 
 public class GameBackgroundService(
     ILogger<GameBackgroundService> logger,
@@ -14,20 +13,20 @@ public class GameBackgroundService(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        this.Logger.LogInformation("Game Background Service is starting.");
+        Logger.LogInformation("Game Background Service is starting.");
 
         try
         {
-            await foreach (var item in this.GuessQueue.ReadAllAsync(stoppingToken))
+            await foreach (var item in GuessQueue.ReadAllAsync(stoppingToken))
             {
                 try
                 {
                     // Todo add DbContext here
-                    this.Logger.LogInformation("Item stored in database. Guess: {guess}", item.Guess);
+                    Logger.LogInformation("Item stored in database. Guess: {guess}", item.Guess);
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.LogError(ex, "Error processing item: {Item}", item);
+                    Logger.LogError(ex, "Error processing item: {Item}", item);
                 }
             }
         }
