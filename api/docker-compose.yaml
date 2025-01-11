@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15 # Use the desired version of PostgreSQL
+    container_name: postgres_namegame
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: namegame
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
