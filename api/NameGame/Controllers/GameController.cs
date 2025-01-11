@@ -11,10 +11,13 @@ public class GameController : ControllerBase
 {
     [HttpPost("")]
     public async Task<IActionResult> CreateGameAsync(
+        [FromBody] CreateGameRepuest createGameRepuest,
         [FromServices] IGameService gameService,
         CancellationToken cancellationToken)
     {
-        var game = await gameService.CreateGameAsync(cancellationToken);
+        var game = await gameService.CreateGameAsync(
+            createGameRepuest,
+            cancellationToken);
 
         return this.Ok(game);
     }

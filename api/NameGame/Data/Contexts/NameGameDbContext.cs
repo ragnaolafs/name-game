@@ -27,16 +27,20 @@ public class NameGameDbContext(
     {
         var addedOrModified = this.ChangeTracker
             .Entries()
-            .Where(e => e.State is EntityState.Added or EntityState.Modified)
-            .Where(e => e is ITimeStamps);
+            .Where(e => e.State is EntityState.Added or EntityState.Modified);
 
-        foreach (var entity in addedOrModified)
+        foreach (var entry in addedOrModified)
         {
-            ((ITimeStamps)entity).UpdatedAt = DateTime.Now;
-
-            if (entity.State is EntityState.Added)
+            if (entry.Entity is not ITimeStamps timestamps)
             {
-                ((ITimeStamps)entity).CreatedAt = DateTime.Now;
+                continue;
+            }
+
+            timestamps.UpdatedAt = DateTime.Now;
+
+            if (entry.State is EntityState.Added)
+            {
+                timestamps.CreatedAt = DateTime.Now;
             }
         }
 

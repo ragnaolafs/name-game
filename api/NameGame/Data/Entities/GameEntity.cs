@@ -6,7 +6,7 @@ namespace NameGame.Data.Entities;
 
 public class GameEntity : ITimeStamps
 {
-    public required string Id { get; set; }
+    public string Id { get; set; } = default!;
 
     public string? Handle { get; set; }
 

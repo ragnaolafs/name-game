@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using NameGame.Application.Extensions;
 using NameGame.Data.Extensions;
@@ -8,7 +9,10 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 // Add services for controllers
-services.AddControllers();
+services
+    .AddControllers()
+    .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters
+        .Add(new JsonStringEnumConverter()));
 
 services
     .AddGameServices()
