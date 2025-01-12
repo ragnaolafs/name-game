@@ -25,7 +25,7 @@ public class WebsocketController(
             return;
         }
 
-        await dispatcher.SubscribeToGuessesAsync(webSocket, cancellationToken);
+        await dispatcher.SubscribeToGuessesAsync(id, webSocket, cancellationToken);
     }
 
     [HttpGet("game/{id}/standings")]

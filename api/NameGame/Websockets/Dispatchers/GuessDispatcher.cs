@@ -12,25 +12,26 @@ public class GuessDispatcher(
 {
     private ILogger<GuessDispatcher> Logger { get; } = logger;
 
-    private ConcurrentBag<WebSocket> Clients { get; } = [];
+    private Dictionary<string, ConcurrentBag<WebSocket>> GameClients { get; } = [];
 
     public async Task PublishGuessAsync(
         AddGuessInput input,
         CancellationToken cancellationToken)
     {
-        this.Logger.LogInformation("Dispatching guess to {numclients} clients", this.Clients.Count);
 
-        if (this.Clients.IsEmpty)
+        if (!this.GameClients.TryGetValue(input.GameId, out var clients) || clients.IsEmpty)
         {
             return;
         }
+
+        this.Logger.LogInformation("Dispatching guess to {numclients} clients", clients.Count);
 
         var serialized = JsonSerializer.Serialize(input);
         var buffer = Encoding.UTF8.GetBytes(serialized);
 
         var subscriptionTasks = new List<Task>();
 
-        foreach (var client in this.Clients)
+        foreach (var client in clients)
         {
             if (client.State is WebSocketState.Open)
             {
@@ -46,12 +47,18 @@ public class GuessDispatcher(
     }
 
     public async Task SubscribeToGuessesAsync(
+        string id,
         WebSocket webSocket,
         CancellationToken cancellationToken)
     {
         this.Logger.LogInformation("Receiving new websocket connection.");
 
-        this.Clients.Add(webSocket);
+        if (!this.GameClients.TryGetValue(id, out var clients))
+        {
+            clients = [];
+        }
+
+        clients.Add(webSocket);
 
         var buffer = new byte[1024 * 4];
 
@@ -65,7 +72,8 @@ public class GuessDispatcher(
             {
                 this.Logger.LogInformation("Closing websocket connection...");
 
-                this.Clients.TryTake(out _);
+                clients.TryTake(out _);
+
                 await webSocket.CloseAsync(
                     WebSocketCloseStatus.NormalClosure,
                     "Closed by server",

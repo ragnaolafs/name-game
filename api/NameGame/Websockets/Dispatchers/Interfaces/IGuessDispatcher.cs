@@ -10,6 +10,7 @@ public interface IGuessDispatcher
         CancellationToken cancellationToken);
 
     Task SubscribeToGuessesAsync(
+        string id,
         WebSocket webSocket,
         CancellationToken cancellationToken);
 }
