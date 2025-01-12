@@ -5,9 +5,11 @@ namespace NameGame.Application.Services.Interfaces;
 
 public interface IGameService
 {
-    public Task<CreateGameResult> CreateGameAsync(
+    Task<CreateGameResult> CreateGameAsync(
         CreateGameRepuest createGameRepuest,
         CancellationToken cancellationToken);
 
-    Task StartGameAsync(CancellationToken cancellationToken);
+    Task<StartGameResult> StartGameAsync(
+        string id,
+        CancellationToken cancellationToken);
 }

@@ -21,6 +21,8 @@ public class GameConfiguration : IEntityTypeConfiguration<GameEntity>
 
         builder
             .Property(g => g.Handle)
+            .ValueGeneratedOnAdd()
+            .HasValueGenerator<HandleGenerator>()
             .HasMaxLength(64);
 
         builder

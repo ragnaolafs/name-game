@@ -1,12 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using NameGame.Application.Queues.Interfaces;
+using NameGame.Application.Score;
 using NameGame.Data.Contexts;
+using NameGame.Exceptions;
+using NameGame.Models;
+using NameGame.Models.Requests;
+using NameGame.Websockets.Dispatchers;
 
 namespace NameGame.Application.Services;
 
 public class GameBackgroundService(
     ILogger<GameBackgroundService> logger,
     IGuessQueue guessQueue,
+    IGuessDispatcher guessDispatcher,
     IDbContextFactory<NameGameDbContext> dbContextFactory)
     : BackgroundService
 {
@@ -14,7 +20,9 @@ public class GameBackgroundService(
 
     private IGuessQueue GuessQueue { get; } = guessQueue;
 
-    private NameGameDbContext NameGameDb = dbContextFactory.CreateDbContext();
+    private IGuessDispatcher GuessDispatcher { get; } = guessDispatcher;
+
+    private NameGameDbContext DbContext { get; } = dbContextFactory.CreateDbContext();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -26,7 +34,8 @@ public class GameBackgroundService(
             {
                 try
                 {
-                    // Todo add DbContext here
+                    await this.HandleGuessAsync(item, stoppingToken);
+
                     Logger.LogInformation("Item stored in database. Guess: {guess}", item.Guess);
                 }
                 catch (Exception ex)
@@ -39,5 +48,28 @@ public class GameBackgroundService(
         {
             Logger.LogInformation("Queue Processor Service is stopping.");
         }
+    }
+
+    private async Task HandleGuessAsync(
+        GuessRequest request,
+        CancellationToken cancellationToken)
+    {
+        var game = await this.DbContext.Games
+            .FirstOrDefaultAsync(g => g.Id == request.GameId, cancellationToken)
+            ?? throw new GameNotFoundException(request.GameId);
+
+        var score = GuessScoreCalculator.CalculateScore(request.Guess, game.Answer);
+
+        this.DbContext.Guesses.Add(new GuessEntity
+        {
+            GameId = game.Id,
+            User = request.User,
+            Guess = request.Guess,
+            Score = score
+        });
+
+        await this.DbContext.SaveChangesAsync(cancellationToken);
+
+        await this.GuessDispatcher.PublishGuessAsync(request, cancellationToken);
     }
 }

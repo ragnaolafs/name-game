@@ -36,11 +36,11 @@ public class NameGameDbContext(
                 continue;
             }
 
-            timestamps.UpdatedAt = DateTime.Now;
+            timestamps.UpdatedAt = DateTime.UtcNow;
 
             if (entry.State is EntityState.Added)
             {
-                timestamps.CreatedAt = DateTime.Now;
+                timestamps.CreatedAt = DateTime.UtcNow;
             }
         }
 

@@ -40,8 +40,8 @@ public class GameController : ControllerBase
         [FromServices] IGameService gameService,
         CancellationToken cancellationToken)
     {
-        await gameService.StartGameAsync(cancellationToken);
+        var result = await gameService.StartGameAsync(id, cancellationToken);
 
-        return this.Ok(new { });
+        return this.Ok(result);
     }
 }

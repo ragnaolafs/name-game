@@ -5,7 +5,7 @@ namespace NameGame.Models;
 
 public class GuessEntity : ITimeStamps
 {
-    public required string Id { get; set; }
+    public string Id { get; set; } = default!;
 
     public required string GameId { get; set; }
 
@@ -13,7 +13,7 @@ public class GuessEntity : ITimeStamps
 
     public required string Guess { get; set; }
 
-    public decimal Score { get; set; }
+    public double Score { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using NameGame.Application.Services.Interfaces;
 using NameGame.Data.Contexts;
 using NameGame.Data.Entities;
+using NameGame.Exceptions;
 using NameGame.Models.Enums;
 using NameGame.Models.Requests;
 using NameGame.Models.Results;
@@ -30,8 +32,18 @@ public class GameService(
         return new CreateGameResult(newgame.Id, newgame.Status);
     }
 
-    public Task StartGameAsync(CancellationToken cancellationToken)
+    public async Task<StartGameResult> StartGameAsync(
+        string id,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var game = await this.DbContext.Games
+            .FirstOrDefaultAsync(g => g.Id == id, cancellationToken)
+            ?? throw new GameNotFoundException(id);
+
+        game.Status = GameStatus.Active;
+
+        await this.DbContext.SaveChangesAsync(cancellationToken);
+
+        return new StartGameResult(game.Id, game.Handle, game.Status);
     }
 }

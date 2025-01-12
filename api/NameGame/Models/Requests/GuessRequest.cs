@@ -9,4 +9,7 @@ public class GuessRequest
 
     [JsonPropertyName("guess")]
     public required string Guess { get; set; }
+
+    [JsonPropertyName("gameId")]
+    public required string GameId { get; set; }
 }
