@@ -51,25 +51,25 @@ public class GameBackgroundService(
     }
 
     private async Task HandleGuessAsync(
-        GuessRequest request,
+        AddGuessInput input,
         CancellationToken cancellationToken)
     {
         var game = await this.DbContext.Games
-            .FirstOrDefaultAsync(g => g.Id == request.GameId, cancellationToken)
-            ?? throw new GameNotFoundException(request.GameId);
+            .FirstOrDefaultAsync(g => g.Id == input.GameId, cancellationToken)
+            ?? throw new GameNotFoundException(input.GameId);
 
-        var score = GuessScoreCalculator.CalculateScore(request.Guess, game.Answer);
+        var score = GuessScoreCalculator.CalculateScore(input.Guess, game.Answer);
 
         this.DbContext.Guesses.Add(new GuessEntity
         {
             GameId = game.Id,
-            User = request.User,
-            Guess = request.Guess,
+            User = input.User,
+            Guess = input.Guess,
             Score = score
         });
 
         await this.DbContext.SaveChangesAsync(cancellationToken);
 
-        await this.GuessDispatcher.PublishGuessAsync(request, cancellationToken);
+        await this.GuessDispatcher.PublishGuessAsync(input, cancellationToken);
     }
 }

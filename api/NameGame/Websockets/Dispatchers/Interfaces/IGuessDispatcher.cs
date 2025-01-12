@@ -5,7 +5,11 @@ namespace NameGame.Websockets.Dispatchers;
 
 public interface IGuessDispatcher
 {
-    Task PublishGuessAsync(GuessRequest guess, CancellationToken cancellationToken);
+    Task PublishGuessAsync(
+        AddGuessInput input,
+        CancellationToken cancellationToken);
 
-    Task SubscribeToGuessesAsync(WebSocket webSocket, CancellationToken cancellationToken);
+    Task SubscribeToGuessesAsync(
+        WebSocket webSocket,
+        CancellationToken cancellationToken);
 }

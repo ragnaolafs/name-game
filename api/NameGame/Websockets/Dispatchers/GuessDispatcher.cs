@@ -15,7 +15,7 @@ public class GuessDispatcher(
     private ConcurrentBag<WebSocket> Clients { get; } = [];
 
     public async Task PublishGuessAsync(
-        GuessRequest request,
+        AddGuessInput input,
         CancellationToken cancellationToken)
     {
         this.Logger.LogInformation("Dispatching guess to {numclients} clients", this.Clients.Count);
@@ -25,7 +25,7 @@ public class GuessDispatcher(
             return;
         }
 
-        var serialized = JsonSerializer.Serialize(request);
+        var serialized = JsonSerializer.Serialize(input);
         var buffer = Encoding.UTF8.GetBytes(serialized);
 
         var subscriptionTasks = new List<Task>();

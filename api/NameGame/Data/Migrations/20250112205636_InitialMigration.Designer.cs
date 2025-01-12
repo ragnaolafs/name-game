@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NameGame.Data.Migrations
 {
     [DbContext(typeof(NameGameDbContext))]
-    [Migration("20250101225832_InitialMigration")]
+    [Migration("20250112205636_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -41,6 +41,7 @@ namespace NameGame.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Handle")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
@@ -77,8 +78,8 @@ namespace NameGame.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<decimal>("Score")
-                        .HasColumnType("numeric");
+                    b.Property<double>("Score")
+                        .HasColumnType("double precision");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");

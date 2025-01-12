@@ -25,11 +25,13 @@ public class GameController : ControllerBase
     [HttpPost("{id}/guess")]
     public async Task<IActionResult> SubmitGuessAsync(
         [FromRoute] string id,
-        [FromBody] GuessRequest request,
-        [FromServices] IGuessingService guessingService,
+        [FromBody] AddGuessRequest request,
+        [FromServices] IGameService gameService,
         CancellationToken cancellationToken)
     {
-        await guessingService.SubmitGuessAsync(request, cancellationToken);
+        var input = new AddGuessInput(id, request.User, request.Guess);
+
+        await gameService.SubmitGuessAsync(input, cancellationToken);
 
         return this.Ok(new { });
     }

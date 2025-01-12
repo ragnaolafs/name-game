@@ -2,14 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace NameGame.Models.Requests;
 
-public class GuessRequest
+public class AddGuessRequest
 {
     [JsonPropertyName("user")]
     public required string User { get; set; }
 
     [JsonPropertyName("guess")]
     public required string Guess { get; set; }
-
-    [JsonPropertyName("gameId")]
-    public required string GameId { get; set; }
 }

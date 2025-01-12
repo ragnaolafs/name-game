@@ -12,4 +12,8 @@ public interface IGameService
     Task<StartGameResult> StartGameAsync(
         string id,
         CancellationToken cancellationToken);
+
+    Task SubmitGuessAsync(
+        AddGuessInput input,
+        CancellationToken cancellationToken);
 }

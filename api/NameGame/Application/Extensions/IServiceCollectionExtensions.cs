@@ -11,7 +11,6 @@ public static class IServiceCollectionExtensions
         this IServiceCollection services)
     {
         services
-            .AddScoped<IGuessingService, GuessingService>()
             .AddSingleton<IGuessQueue, GuessQueue>()
             .AddHostedService<GameBackgroundService>()
             .AddScoped<IGameService, GameService>();

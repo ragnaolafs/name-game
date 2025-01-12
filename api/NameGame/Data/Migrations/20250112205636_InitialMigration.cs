@@ -35,7 +35,7 @@ namespace NameGame.Data.Migrations
                     GameId = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     User = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     Guess = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    Score = table.Column<decimal>(type: "numeric", nullable: false),
+                    Score = table.Column<double>(type: "double precision", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },

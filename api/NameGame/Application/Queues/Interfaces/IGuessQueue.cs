@@ -4,7 +4,9 @@ namespace NameGame.Application.Queues.Interfaces;
 
 public interface IGuessQueue
 {
-    ValueTask EnqueueGuessAsync(GuessRequest request, CancellationToken cancellationToken);
+    ValueTask EnqueueGuessAsync(
+        AddGuessInput input,
+        CancellationToken cancellationToken);
 
-    IAsyncEnumerable<GuessRequest> ReadAllAsync(CancellationToken cancellationToken);
+    IAsyncEnumerable<AddGuessInput> ReadAllAsync(CancellationToken cancellationToken);
 }

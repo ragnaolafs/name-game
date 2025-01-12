@@ -7,8 +7,8 @@ namespace NameGame.Application.Queues;
 
 public class GuessQueue() : IGuessQueue
 {
-    private readonly Channel<GuessRequest> _channel =
-        Channel.CreateUnbounded<GuessRequest>(
+    private readonly Channel<AddGuessInput> _channel =
+        Channel.CreateUnbounded<AddGuessInput>(
             new UnboundedChannelOptions
             {
                 SingleReader = true,
@@ -16,13 +16,13 @@ public class GuessQueue() : IGuessQueue
             });
 
     public ValueTask EnqueueGuessAsync(
-        GuessRequest request,
+        AddGuessInput input,
         CancellationToken cancellationToken)
     {
-        return _channel.Writer.WriteAsync(request, cancellationToken);
+        return _channel.Writer.WriteAsync(input, cancellationToken);
     }
 
-    public IAsyncEnumerable<GuessRequest> ReadAllAsync(
+    public IAsyncEnumerable<AddGuessInput> ReadAllAsync(
         CancellationToken cancellationToken)
     {
         return _channel.Reader.ReadAllAsync(cancellationToken);

@@ -4,7 +4,7 @@ public static class GuessScoreCalculator
 {
     public static double CalculateScore(string guess, string answer)
     {
-        int distance = CalculateLevenshteinDistance(guess, answer);
+        int distance = CalculateLevenshteinDistance(guess.ToLower(), answer.ToLower());
         int maxLength = Math.Max(guess.Length, answer.Length);
 
         if (maxLength == 0)
