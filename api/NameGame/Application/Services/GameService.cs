@@ -7,24 +7,20 @@ using NameGame.Exceptions;
 using NameGame.Models.Enums;
 using NameGame.Models.Requests;
 using NameGame.Models.Results;
-using NameGame.Websockets.Dispatchers;
 
 namespace NameGame.Application.Services;
 
 public class GameService(
     ILogger<GameService> logger,
-    IGuessDispatcher guessDispatcher,
     IGuessQueue guessQueue,
-    NameGameDbContext dbContext)
+    IDbContextFactory<NameGameDbContext> dbContextFactory)
     : IGameService
 {
     private ILogger<GameService> Logger { get; } = logger;
 
-    private IGuessDispatcher GuessDispatcher { get; } = guessDispatcher;
-
     private IGuessQueue GuessQueue { get; } = guessQueue;
 
-    private NameGameDbContext DbContext { get; } = dbContext;
+    private NameGameDbContext DbContext { get; } = dbContextFactory.CreateDbContext();
 
     public async Task<CreateGameResult> CreateGameAsync(
         CreateGameRepuest createGameRepuest,
@@ -68,7 +64,7 @@ public class GameService(
     {
         this.Logger.LogInformation("Receiving a new guess. {user} guessed: {guess}", input.User, input.Guess);
 
-        await GuessDispatcher.PublishGuessAsync(input, cancellationToken);
+        // todo: check if game is active
 
         await GuessQueue.EnqueueGuessAsync(input, cancellationToken);
     }
