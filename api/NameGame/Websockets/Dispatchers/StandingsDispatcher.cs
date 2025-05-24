@@ -61,6 +61,8 @@ public class StandingsDispatcher(
 
         clients.Add(webSocket);
 
+        this.GameClients[id] = clients;
+
         var buffer = new byte[1024 * 4];
 
         while (webSocket.State is WebSocketState.Open)

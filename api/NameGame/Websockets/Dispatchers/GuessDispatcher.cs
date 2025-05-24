@@ -21,6 +21,10 @@ public class GuessDispatcher(
         if (!this.GameClients.TryGetValue(input.GameId, out var clients)
             || clients.IsEmpty)
         {
+            this.Logger.LogInformation(
+                "No clients subscribed to game {GameId} for guesses",
+                input.GameId);
+
             return;
         }
 
@@ -59,6 +63,8 @@ public class GuessDispatcher(
         }
 
         clients.Add(webSocket);
+
+        this.GameClients[id] = clients;
 
         var buffer = new byte[1024 * 4];
 
