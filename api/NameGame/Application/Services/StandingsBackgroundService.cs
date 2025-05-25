@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using NameGame.Application.Queues.Interfaces;
 using NameGame.Data.Contexts;
 using NameGame.Data.Extensions;
-using NameGame.Models.Requests;
 using NameGame.Models.Results;
 using NameGame.Websockets.Dispatchers.Interfaces;
 
@@ -54,25 +53,33 @@ public class StandingsBackgroundService(
     }
 
     private async Task UpdateStandingsAsync(
-        AddGuessInput newGuess,
+        GuessResult newGuess,
         CancellationToken cancellationToken)
     {
-        this.Logger.LogInformation(
+        this.Logger.LogDebug(
             "calculating standings. top player limit is {limit}",
             this.TopPlayersLimit);
+
+        if (!this.Standings.TryGetValue(newGuess.GameId, out var currentStandings))
+        {
+            currentStandings = null;
+        }
+
+        var lowestScore = currentStandings?.TopGuesses.LastOrDefault()?.Score;
+
+        if (newGuess.Score < lowestScore)
+        {
+            this.Logger.LogInformation(
+                "New guess score {score} is lower than the lowest score in current standings {lowestScore}. No need to update standings.",
+                newGuess.Score,
+                lowestScore);
+            // return;
+        }
 
         var newStandings = await this.DbContext.Guesses.CalculateStandings(
             newGuess,
             this.TopPlayersLimit,
             cancellationToken);
-
-        // todo does equals this work?
-        if (this.Standings.TryGetValue(newGuess.GameId, out var currentStandings)
-            && currentStandings.Equals(newStandings))
-        {
-            this.Logger.LogInformation("Standings are the same. No need to update.");
-            return;
-        }
 
         this.Standings[newGuess.GameId] = newStandings;
 

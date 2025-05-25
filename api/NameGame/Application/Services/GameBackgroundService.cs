@@ -5,6 +5,7 @@ using NameGame.Data.Contexts;
 using NameGame.Exceptions;
 using NameGame.Models;
 using NameGame.Models.Requests;
+using NameGame.Models.Results;
 using NameGame.Websockets.Dispatchers;
 
 namespace NameGame.Application.Services;
@@ -63,20 +64,31 @@ public class GameBackgroundService(
 
         var score = GuessScoreCalculator.CalculateScore(input.Guess, game.Answer);
 
-        this.DbContext.Guesses.Add(new GuessEntity
+        var guess = new GuessEntity
         {
             GameId = game.Id,
             User = input.User,
             Guess = input.Guess,
             Score = score
-        });
+        };
+
+        this.DbContext.Guesses.Add(guess);
 
         await this.DbContext.SaveChangesAsync(cancellationToken);
 
-        // todo publish GuessResult not AddGuessInput
+        var guessResult = new GuessResult(
+            guess.Id,
+            guess.GameId,
+            guess.User,
+            guess.Guess,
+            guess.Score);
 
-        await this.GuessDispatcher.PublishGuessAsync(input, cancellationToken);
+        await this.GuessDispatcher.PublishGuessAsync(
+            guessResult,
+            cancellationToken);
 
-        await this.StandingsQueue.EnqueueUpdateStandingsAsync(input, cancellationToken);
+        await this.StandingsQueue.EnqueueUpdateStandingsAsync(
+            guessResult,
+            cancellationToken);
     }
 }

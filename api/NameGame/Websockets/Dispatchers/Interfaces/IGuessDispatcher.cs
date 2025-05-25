@@ -1,12 +1,12 @@
 using System.Net.WebSockets;
-using NameGame.Models.Requests;
+using NameGame.Models.Results;
 
 namespace NameGame.Websockets.Dispatchers;
 
 public interface IGuessDispatcher
 {
     Task PublishGuessAsync(
-        AddGuessInput input,
+        GuessResult guess,
         CancellationToken cancellationToken);
 
     Task SubscribeToGuessesAsync(

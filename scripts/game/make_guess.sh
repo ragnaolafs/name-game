@@ -22,7 +22,9 @@ RANDOM_GUESS=$(shuf -n 2 names.txt | paste -sd ' ')
 JSON_BODY=$(jq -n --arg user "test user" --arg guess "$RANDOM_GUESS" \
   '{user: $user, guess: $guess}')
 
+echo "Making guess: $RANDOM_GUESS"
+
 # Make the POST request
-curl -X POST "$URL" \
+curl -s -X POST "$URL" \
   -H "Content-Type: application/json" \
-  -d "$JSON_BODY"
+  -d "$JSON_BODY" > /dev/null

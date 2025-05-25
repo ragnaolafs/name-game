@@ -1,14 +1,14 @@
-using NameGame.Models.Requests;
+using NameGame.Models.Results;
 
 namespace NameGame.Application.Queues.Interfaces;
 
 public interface IStandingsQueue
 {
     ValueTask EnqueueUpdateStandingsAsync(
-        AddGuessInput incomingGuess,
+        GuessResult guess,
         CancellationToken cancellationToken);
 
-    IAsyncEnumerable<AddGuessInput> ReadAllAsync(
+    IAsyncEnumerable<GuessResult> ReadAllAsync(
         CancellationToken cancellationToken);
 
 }

@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using NameGame.Models;
-using NameGame.Models.Requests;
 using NameGame.Models.Results;
 
 namespace NameGame.Data.Extensions;
@@ -9,7 +8,7 @@ public static class GuessEntityExtensions
 {
     public static async Task<StandingsResult> CalculateStandings(
         this DbSet<GuessEntity> guesses,
-        AddGuessInput incomingGuess,
+        GuessResult incomingGuess,
         int limit,
         CancellationToken cancellationToken)
     {
@@ -19,6 +18,7 @@ public static class GuessEntityExtensions
             .Take(limit)
             .Select(g => new GuessResult(
                 g.Id,
+                g.GameId,
                 g.User,
                 g.Guess,
                 g.Score))

@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
-using NameGame.Models.Requests;
+using NameGame.Models.Results;
 
 namespace NameGame.Websockets.Dispatchers;
 
@@ -15,22 +15,22 @@ public class GuessDispatcher(
     private Dictionary<string, ConcurrentBag<WebSocket>> GameClients { get; } = [];
 
     public async Task PublishGuessAsync(
-        AddGuessInput input,
+        GuessResult guess,
         CancellationToken cancellationToken)
     {
-        if (!this.GameClients.TryGetValue(input.GameId, out var clients)
+        if (!this.GameClients.TryGetValue(guess.GameId, out var clients)
             || clients.IsEmpty)
         {
             this.Logger.LogInformation(
                 "No clients subscribed to game {GameId} for guesses",
-                input.GameId);
+                guess.GameId);
 
             return;
         }
 
         this.Logger.LogInformation("Dispatching guess to {numclients} clients", clients.Count);
 
-        var serialized = JsonSerializer.Serialize(input);
+        var serialized = JsonSerializer.Serialize(guess);
         var buffer = Encoding.UTF8.GetBytes(serialized);
 
         var subscriptionTasks = new List<Task>();

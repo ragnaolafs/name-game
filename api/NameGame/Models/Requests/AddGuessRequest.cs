@@ -9,4 +9,6 @@ public class AddGuessRequest
 
     [JsonPropertyName("guess")]
     public required string Guess { get; set; }
+
+    // todo add if guess was randomized
 }

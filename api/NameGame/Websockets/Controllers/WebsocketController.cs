@@ -74,6 +74,7 @@ public class WebsocketController(
     [HttpGet("game/{id}/status")]
     public Task SubscribeToGameStatusAsync(string id)
     {
+        // todo implement game status 
         throw new NotImplementedException();
     }
 }
