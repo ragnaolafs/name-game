@@ -5,10 +5,10 @@ namespace NameGame.Models.Requests;
 public class AddGuessRequest
 {
     [JsonPropertyName("user")]
-    public required string User { get; set; }
+    public string User { get; set; } = default!;
 
     [JsonPropertyName("guess")]
-    public required string Guess { get; set; }
+    public string Guess { get; set; } = default!;
 
     // todo add if guess was randomized
 }

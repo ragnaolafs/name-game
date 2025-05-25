@@ -30,7 +30,15 @@ services.AddSwaggerGen(c =>
         Version = "v1 "
     }));
 
+builder.Services.AddCors(options => options
+    .AddDefaultPolicy(policy => policy
+        .WithOrigins("http://localhost:5173") // frontend dev server (Vite default)
+        .AllowAnyHeader()
+        .AllowAnyMethod()));
+
 var app = builder.Build();
+
+app.UseCors();
 
 // WebSocket options
 var webSocketOptions = new WebSocketOptions
