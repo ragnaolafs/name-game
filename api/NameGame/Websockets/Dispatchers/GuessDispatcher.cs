@@ -14,6 +14,13 @@ public class GuessDispatcher(
 
     private Dictionary<string, ConcurrentBag<WebSocket>> GameClients { get; } = [];
 
+    private JsonSerializerOptions JsonSerializerOptions { get; } =
+        new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true,
+        };
+
     public async Task PublishGuessAsync(
         GuessResult guess,
         CancellationToken cancellationToken)
@@ -30,7 +37,10 @@ public class GuessDispatcher(
 
         this.Logger.LogInformation("Dispatching guess to {numclients} clients", clients.Count);
 
-        var serialized = JsonSerializer.Serialize(guess);
+        var serialized = JsonSerializer.Serialize(
+            guess,
+            this.JsonSerializerOptions);
+
         var buffer = Encoding.UTF8.GetBytes(serialized);
 
         var subscriptionTasks = new List<Task>();

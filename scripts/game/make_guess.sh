@@ -19,7 +19,11 @@ fi
 RANDOM_GUESS=$(shuf -n 2 names.txt | paste -sd ' ')
 
 # Build JSON body
-JSON_BODY=$(jq -n --arg user "test user" --arg guess "$RANDOM_GUESS" \
+# Pick a random name for the user
+RANDOM_USER=$(shuf -n 1 names.txt)
+
+# Build JSON body
+JSON_BODY=$(jq -n --arg user "$RANDOM_USER" --arg guess "$RANDOM_GUESS" \
   '{user: $user, guess: $guess}')
 
 echo "Making guess: $RANDOM_GUESS"

@@ -15,6 +15,13 @@ public class StandingsDispatcher(
 
     private Dictionary<string, ConcurrentBag<WebSocket>> GameClients { get; } = [];
 
+    private JsonSerializerOptions JsonSerializerOptions { get; } =
+        new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true,
+        };
+
     public async Task PublishStandingsAsync(
         StandingsResult standings,
         CancellationToken cancellationToken)
@@ -22,12 +29,18 @@ public class StandingsDispatcher(
         if (!this.GameClients.TryGetValue(standings.GameId, out var clients)
             || clients.IsEmpty)
         {
+            this.Logger.LogInformation(
+                "No clients subscribed to standings for game {gameId}.",
+                standings.GameId);
             return;
         }
 
         this.Logger.LogInformation("Dispatching standings to {numclients} clients", clients.Count);
 
-        var serialized = JsonSerializer.Serialize(standings);
+        var serialized = JsonSerializer.Serialize(
+            standings,
+            this.JsonSerializerOptions);
+
         var buffer = Encoding.UTF8.GetBytes(serialized);
 
         var subscriptionTasks = new List<Task>();
@@ -52,7 +65,7 @@ public class StandingsDispatcher(
         WebSocket webSocket,
         CancellationToken cancellationToken)
     {
-        this.Logger.LogInformation("Receiving new websocket connection.");
+        this.Logger.LogInformation("Receiving new websocket connection for standings subscription.");
 
         if (!this.GameClients.TryGetValue(id, out var clients))
         {
@@ -62,6 +75,11 @@ public class StandingsDispatcher(
         clients.Add(webSocket);
 
         this.GameClients[id] = clients;
+
+        this.Logger.LogInformation(
+            "Subscribed client to standings for game {gameId}. Total clients: {numClients}",
+            id,
+            clients.Count);
 
         var buffer = new byte[1024 * 4];
 

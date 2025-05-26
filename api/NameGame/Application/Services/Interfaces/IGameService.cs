@@ -9,6 +9,10 @@ public interface IGameService
         CreateGameRepuest createGameRepuest,
         CancellationToken cancellationToken);
 
+    Task<GetGameResult> GetGameAsync(
+        string id,
+        CancellationToken cancellationToken);
+
     Task<StartGameResult> StartGameAsync(
         string id,
         CancellationToken cancellationToken);

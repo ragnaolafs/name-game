@@ -5,4 +5,5 @@ public record GuessResult(
     string GameId,
     string User,
     string Guess,
-    double Score);
+    double Score,
+    double ScorePercent);

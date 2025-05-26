@@ -6,7 +6,6 @@ type Props = {
 };
 
 export default function GuessStream({ guesses }: Props) {
-  console.log("Rendering GuessStream with guesses:", guesses);
   return (
     <div className="bg-white rounded-xl shadow p-4 w-full max-w-xl max-h-60 overflow-y-auto">
       <h2 className="text-xl font-semibold mb-2">Recent Guesses</h2>
@@ -14,13 +13,13 @@ export default function GuessStream({ guesses }: Props) {
         {guesses
           .slice(-50)
           .reverse()
-          .map(({ id, user, guess, score }) => (
+          .map(({ id, user, guess, scorePercent }) => (
             <li key={id} className="text-sm flex justify-between">
               <span>
                 <strong>{user}</strong>: {guess}
               </span>
-              <span className={`font-semibold ${getScoreColor(score)}`}>
-                {score}
+              <span className={`font-semibold ${getScoreColor(scorePercent)}`}>
+                {scorePercent.toFixed(2)}%
               </span>
             </li>
           ))}

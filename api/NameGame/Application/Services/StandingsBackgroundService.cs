@@ -56,10 +56,6 @@ public class StandingsBackgroundService(
         GuessResult newGuess,
         CancellationToken cancellationToken)
     {
-        this.Logger.LogDebug(
-            "calculating standings. top player limit is {limit}",
-            this.TopPlayersLimit);
-
         if (!this.Standings.TryGetValue(newGuess.GameId, out var currentStandings))
         {
             currentStandings = null;
@@ -67,24 +63,23 @@ public class StandingsBackgroundService(
 
         var lowestScore = currentStandings?.TopGuesses.LastOrDefault()?.Score;
 
-        if (newGuess.Score < lowestScore)
+        if (currentStandings is null || newGuess.Score > lowestScore)
         {
-            this.Logger.LogInformation(
-                "New guess score {score} is lower than the lowest score in current standings {lowestScore}. No need to update standings.",
-                newGuess.Score,
-                lowestScore);
-            // return;
+            this.Logger.LogInformation("New guess score {score} is higher than the lowest score {lowestScore}. Recalculating standings.",
+                newGuess.Score, lowestScore);
+
+            currentStandings = await this.DbContext.Guesses.CalculateStandings(
+                newGuess.GameId,
+                this.TopPlayersLimit,
+                cancellationToken);
+
+            this.Standings[newGuess.GameId] = currentStandings;
         }
 
-        var newStandings = await this.DbContext.Guesses.CalculateStandings(
-            newGuess,
-            this.TopPlayersLimit,
-            cancellationToken);
-
-        this.Standings[newGuess.GameId] = newStandings;
+        this.Logger.LogInformation("Publishing standings.");
 
         await this.StandingsDispatcher.PublishStandingsAsync(
-            newStandings,
+            currentStandings,
             cancellationToken);
     }
 }

@@ -81,7 +81,8 @@ public class GameBackgroundService(
             guess.GameId,
             guess.User,
             guess.Guess,
-            guess.Score);
+            guess.Score,
+            guess.Score * 100);
 
         await this.GuessDispatcher.PublishGuessAsync(
             guessResult,
