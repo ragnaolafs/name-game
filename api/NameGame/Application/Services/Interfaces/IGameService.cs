@@ -13,6 +13,10 @@ public interface IGameService
         string id,
         CancellationToken cancellationToken);
 
+    Task<GetGameResult> GetGameByHandle(
+        string handle,
+        CancellationToken cancellationToken);
+
     Task<StartGameResult> StartGameAsync(
         string id,
         CancellationToken cancellationToken);

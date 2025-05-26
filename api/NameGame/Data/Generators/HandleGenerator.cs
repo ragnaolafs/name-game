@@ -9,7 +9,7 @@ public class HandleGenerator : ValueGenerator<string>
 
     public override string Next(EntityEntry entry)
     {
-        var length = 8;
+        var length = 4;
         var random = new Random();
 
         return new string([.. Enumerable

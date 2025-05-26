@@ -10,8 +10,6 @@ import GuessStream from "@/components/GuessStream";
 import UsernameForm from "@/components/UsernameForm";
 import GuessForm from "@/components/GuessForm";
 
-const API_BASE = "/api";
-
 export default function ParticipantView() {
   const { gameId } = useParams<{ gameId: string }>();
 

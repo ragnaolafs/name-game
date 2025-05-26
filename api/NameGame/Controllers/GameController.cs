@@ -33,6 +33,17 @@ public class GameController : ControllerBase
         return this.Ok(game);
     }
 
+    [HttpGet("join/{handle}")]
+    public async Task<IActionResult> JoinGameAsync(
+        [FromRoute] string handle,
+        [FromServices] IGameService gameService,
+        CancellationToken cancellationToken)
+    {
+        var result = await gameService.GetGameByHandle(handle, cancellationToken);
+
+        return this.Ok(result);
+    }
+
     [HttpPost("{id}/guess")]
     public async Task<IActionResult> SubmitGuessAsync(
         [FromRoute] string id,

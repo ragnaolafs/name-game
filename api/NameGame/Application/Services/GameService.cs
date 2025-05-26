@@ -79,6 +79,22 @@ public class GameService(
         return new GetGameResult(gameId, game.Status, game.Handle, standings);
     }
 
+    public async Task<GetGameResult> GetGameByHandle(
+        string handle,
+        CancellationToken cancellationToken)
+    {
+        var game = await this.DbContext.Games
+            .FirstOrDefaultAsync(g => g.Handle == handle, cancellationToken)
+                ?? throw new GameNotFoundException(handle);
+
+        var standings = await this.DbContext.Guesses.CalculateStandings(
+            game.Id,
+            this.TopPlayersLimit,
+            cancellationToken);
+
+        return new GetGameResult(game.Id, game.Status, game.Handle, standings);
+    }
+
     public async Task SubmitGuessAsync(
         AddGuessInput input,
         CancellationToken cancellationToken)
