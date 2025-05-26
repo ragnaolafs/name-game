@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import React from "react";
 
 type Props = {
   onSubmit: (name: string) => void;

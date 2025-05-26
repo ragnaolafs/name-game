@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import React from "react";
 
 export default function GamePrompt() {
   const [id, setId] = useState("");

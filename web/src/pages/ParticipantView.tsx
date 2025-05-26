@@ -1,4 +1,4 @@
-// pages/ParticipantView.tsx
+import React from "react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { API_BASE_URL } from "@/config";
@@ -30,14 +30,10 @@ export default function ParticipantView() {
   useWebSocket(standingsStreamUrl, (s) => setStandings(s.topGuesses));
 
   async function submitGuess(gameId: string, user: string, guess: string) {
-    const body = { user, guess };
-
-    console.log("Submitting guess:", body);
-
     const res = await fetch(`${API_BASE_URL}/game/${gameId}/guess`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ user, guess }),
     });
 
     if (!res.ok) {

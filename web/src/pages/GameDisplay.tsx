@@ -5,6 +5,7 @@ import { WS_BASE_URL } from "@/config";
 import StandingsPanel from "@/components/StandingsPanel";
 import GuessStream from "@/components/GuessStream";
 import useWebSocket from "@/hooks/useWebSocket";
+import React from "react";
 
 const API_BASE = "/api";
 

@@ -1,8 +1,14 @@
 // components/StandingsPanel.tsx
+import React from "react";
 import getScoreColor from "./ScoreColor";
 
 type Props = {
-  standings: { id: string; user: string; guess: string; score: number }[];
+  standings: {
+    id: string;
+    user: string;
+    guess: string;
+    scorePercent: number;
+  }[];
 };
 
 export default function StandingsPanel({ standings }: Props) {

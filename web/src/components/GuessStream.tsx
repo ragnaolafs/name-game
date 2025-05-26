@@ -1,8 +1,9 @@
 // components/GuessStream.tsx
+import React from "react";
 import getScoreColor from "./ScoreColor";
 
 type Props = {
-  guesses: { id: string; user: string; guess: string; score: number }[];
+  guesses: { id: string; user: string; guess: string; scorePercent: number }[];
 };
 
 export default function GuessStream({ guesses }: Props) {
