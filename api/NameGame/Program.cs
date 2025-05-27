@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using NameGame.Application.Extensions;
 using NameGame.Data.Extensions;
+using NameGame.Middleware;
 using NameGame.Websockets.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,8 @@ var webSocketOptions = new WebSocketOptions
 };
 
 app.UseWebSockets(webSocketOptions);
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Map controller routes
 app.MapControllers();
