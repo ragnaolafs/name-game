@@ -38,6 +38,17 @@ public class ExceptionMiddleware(RequestDelegate next)
             data.Add(new { status = gameNotActiveException.Status });
         }
 
+        if (exception is GuessAlreadySubmittedException guessAlreadySubmittedException)
+        {
+            statusCode = 400;
+            message = guessAlreadySubmittedException.Message;
+            data.Add(new
+            {
+                gameId = guessAlreadySubmittedException.GameId,
+                guess = guessAlreadySubmittedException.Guess
+            });
+        }
+
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCode;
 

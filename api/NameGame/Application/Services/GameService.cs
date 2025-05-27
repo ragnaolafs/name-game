@@ -110,7 +110,13 @@ public class GameService(
             throw new GameNotActiveException(game);
         }
 
-        // todo: check if guess has already been submitted
+        if (await this.DbContext.Guesses.AnyAsync(g =>
+            g.GameId == input.GameId
+            && g.Guess == input.Guess, cancellationToken))
+        {
+            throw new GuessAlreadySubmittedException(input.GameId, input.Guess);
+        }
+
 
         await GuessQueue.EnqueueGuessAsync(input, cancellationToken);
     }
