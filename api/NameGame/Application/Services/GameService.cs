@@ -101,7 +101,14 @@ public class GameService(
     {
         this.Logger.LogInformation("Receiving a new guess. {user} guessed: {guess}", input.User, input.Guess);
 
-        // todo: check if game is active
+        var game = await this.DbContext.Games
+            .FirstOrDefaultAsync(g => g.Id == input.GameId, cancellationToken)
+                ?? throw new GameNotFoundException(input.GameId);
+
+        if (game.Status is not GameStatus.Active)
+        {
+            throw new GameNotActiveException(game);
+        }
 
         // todo: check if guess has already been submitted
 

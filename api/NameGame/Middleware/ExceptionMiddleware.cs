@@ -23,6 +23,7 @@ public class ExceptionMiddleware(RequestDelegate next)
     {
         int statusCode = 500;
         string message = "An unexpected error occurred.";
+        List<object> data = [];
 
         if (exception is GameNotFoundException gameNotFoundException)
         {
@@ -30,10 +31,18 @@ public class ExceptionMiddleware(RequestDelegate next)
             message = gameNotFoundException.Message;
         }
 
+        if (exception is GameNotActiveException gameNotActiveException)
+        {
+            statusCode = 400;
+            message = gameNotActiveException.Message;
+            data.Add(new { status = gameNotActiveException.Status });
+        }
+
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCode;
 
-        var response = new { error = message };
+        var response = new { error = message, data };
+
         return context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 }
