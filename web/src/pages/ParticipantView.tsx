@@ -37,7 +37,6 @@ export default function ParticipantView() {
     if (!res.ok) {
       // handle error, show message
       console.error("Failed to submit guess", res.statusText);
-      throw new Error("Failed to submit guess");
     }
   }
 

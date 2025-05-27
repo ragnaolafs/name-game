@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 
 export default function useWebSocket(url: string, onMessage: (data: any) => void) {
-    console.log("useWebSocket initialized for URL:", url);
     useEffect(() => {
         const ws = new WebSocket(url);
         ws.onmessage = (event) => {
