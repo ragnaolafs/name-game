@@ -1,8 +1,8 @@
 // hooks/useWebSocket.ts
 import { useEffect } from "react";
-import { WS_BASE_URL } from "@/config";
 
 export default function useWebSocket(url: string, onMessage: (data: any) => void) {
+    console.log("useWebSocket initialized for URL:", url);
     useEffect(() => {
         const ws = new WebSocket(url);
         ws.onmessage = (event) => {

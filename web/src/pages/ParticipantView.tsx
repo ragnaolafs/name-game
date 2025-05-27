@@ -41,6 +41,10 @@ export default function ParticipantView() {
     }
   }
 
+  // todo clear input on submit
+
+  // todo implement random guesses
+
   return (
     <div className="flex flex-col items-center gap-4 p-6 min-h-screen bg-gradient-to-br from-green-100 to-blue-200">
       <h1 className="text-2xl font-bold">Join Game: {gameId}</h1>
