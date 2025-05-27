@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NameGame.Application.Queues.Interfaces;
 using NameGame.Application.Score;
 using NameGame.Data.Contexts;
-using NameGame.Exceptions;
+using NameGame.Data.Extensions;
 using NameGame.Models;
 using NameGame.Models.Requests;
 using NameGame.Models.Results;
@@ -58,9 +58,9 @@ public class GameBackgroundService(
         AddGuessInput input,
         CancellationToken cancellationToken)
     {
-        var game = await this.DbContext.Games
-            .FirstOrDefaultAsync(g => g.Id == input.GameId, cancellationToken)
-            ?? throw new GameNotFoundException(input.GameId);
+        var game = await this.DbContext.Games.GetGameByIdAsync(
+            input.GameId,
+            cancellationToken);
 
         var score = GuessScoreCalculator.CalculateScore(input.Guess, game.Answer);
 

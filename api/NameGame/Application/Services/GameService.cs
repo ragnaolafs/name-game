@@ -50,9 +50,9 @@ public class GameService(
         string id,
         CancellationToken cancellationToken)
     {
-        var game = await this.DbContext.Games
-            .FirstOrDefaultAsync(g => g.Id == id, cancellationToken)
-                ?? throw new GameNotFoundException(id);
+        var game = await this.DbContext.Games.GetGameByIdAsync(
+            id,
+            cancellationToken);
 
         game.Status = GameStatus.Active;
 
@@ -67,9 +67,9 @@ public class GameService(
         string gameId,
         CancellationToken cancellationToken)
     {
-        var game = await this.DbContext.Games
-            .FirstOrDefaultAsync(g => g.Id == gameId, cancellationToken)
-                ?? throw new GameNotFoundException(gameId);
+        var game = await this.DbContext.Games.GetGameByIdAsync(
+            gameId,
+            cancellationToken);
 
         var standings = await this.DbContext.Guesses.CalculateStandings(
             gameId,
@@ -83,9 +83,9 @@ public class GameService(
         string handle,
         CancellationToken cancellationToken)
     {
-        var game = await this.DbContext.Games
-            .FirstOrDefaultAsync(g => g.Handle == handle, cancellationToken)
-                ?? throw new GameNotFoundException(handle);
+        var game = await this.DbContext.Games.GetGameByHandleAsync(
+            handle,
+            cancellationToken);
 
         var standings = await this.DbContext.Guesses.CalculateStandings(
             game.Id,
