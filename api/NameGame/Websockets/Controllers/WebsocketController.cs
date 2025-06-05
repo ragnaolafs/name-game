@@ -72,9 +72,30 @@ public class WebsocketController(
     }
 
     [HttpGet("game/{id}/status")]
-    public Task SubscribeToGameStatusAsync(string id)
+    public async Task SubscribeToGameStatusAsync(
+        string id,
+        [FromServices] IStatusDispatcher dispatcher,
+        CancellationToken cancellationToken)
     {
-        // todo implement game status 
-        throw new NotImplementedException();
+        this.Logger.LogInformation(
+            "Websocket request to subscribe to game status for game {GameId}",
+            id);
+
+        var webSocket = await this.WebSocketService.AcceptWebSocketAsync(
+            this.HttpContext);
+
+        if (webSocket is null)
+        {
+            this.Logger.LogWarning(
+                "Websocket request to subscribe to game status for game {GameId} failed",
+                id);
+
+            return;
+        }
+
+        await dispatcher.SubscribeToGameStatusAsync(
+            id,
+            webSocket,
+            cancellationToken);
     }
 }

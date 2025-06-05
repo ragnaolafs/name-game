@@ -13,6 +13,9 @@ public class GuessEntity : ITimeStamps
 
     public required string Guess { get; set; }
 
+    /// <summary>
+    /// Score from 0 to 1
+    /// </summary>
     public double Score { get; set; }
 
     public DateTime? CreatedAt { get; set; }

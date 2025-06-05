@@ -4,6 +4,8 @@ using NameGame.Application.Score;
 using NameGame.Data.Contexts;
 using NameGame.Data.Extensions;
 using NameGame.Models;
+using NameGame.Models.Enums;
+using NameGame.Models.Messages;
 using NameGame.Models.Requests;
 using NameGame.Models.Results;
 using NameGame.Websockets.Dispatchers;
@@ -15,6 +17,7 @@ public class GameBackgroundService(
     IGuessQueue guessQueue,
     IGuessDispatcher guessDispatcher,
     IStandingsQueue standingsQueue,
+    IStatusQueue statusQueue,
     IDbContextFactory<NameGameDbContext> dbContextFactory)
     : BackgroundService
 {
@@ -25,6 +28,8 @@ public class GameBackgroundService(
     private IGuessDispatcher GuessDispatcher { get; } = guessDispatcher;
 
     private IStandingsQueue StandingsQueue { get; } = standingsQueue;
+
+    private IStatusQueue StatusQueue { get; } = statusQueue;
 
     private NameGameDbContext DbContext { get; } = dbContextFactory.CreateDbContext();
 
@@ -83,6 +88,24 @@ public class GameBackgroundService(
             guess.Guess,
             guess.Score,
             guess.Score * 100);
+
+        if (guess.Score == 1)
+        {
+            this.Logger.LogInformation("Correct answer. Winner: {user}", guess.User);
+
+            game.Status = GameStatus.Finished;
+
+            await this.DbContext.SaveChangesAsync(cancellationToken);
+
+            await this.StatusQueue.EnqueueUpdateStatusAsync(
+                new GameEvent
+                {
+                    GameId = game.Id,
+                    Event = GameEventType.GameFinished,
+                    Guess = guessResult
+                },
+                cancellationToken);
+        }
 
         await this.GuessDispatcher.PublishGuessAsync(
             guessResult,

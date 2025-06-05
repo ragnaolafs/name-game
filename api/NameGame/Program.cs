@@ -3,7 +3,6 @@ using Microsoft.OpenApi.Models;
 using NameGame.Application.Extensions;
 using NameGame.Data.Extensions;
 using NameGame.Middleware;
-using NameGame.Websockets.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;

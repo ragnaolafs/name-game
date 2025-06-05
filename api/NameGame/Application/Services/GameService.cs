@@ -6,6 +6,7 @@ using NameGame.Data.Entities;
 using NameGame.Data.Extensions;
 using NameGame.Exceptions;
 using NameGame.Models.Enums;
+using NameGame.Models.Messages;
 using NameGame.Models.Requests;
 using NameGame.Models.Results;
 
@@ -15,7 +16,8 @@ public class GameService(
     ILogger<GameService> logger,
     IGuessQueue guessQueue,
     IDbContextFactory<NameGameDbContext> dbContextFactory,
-    IConfiguration configuration)
+    IConfiguration configuration,
+    IStatusQueue statusQueue)
     : IGameService
 {
     private ILogger<GameService> Logger { get; } = logger;
@@ -23,6 +25,8 @@ public class GameService(
     private IGuessQueue GuessQueue { get; } = guessQueue;
 
     private NameGameDbContext DbContext { get; } = dbContextFactory.CreateDbContext();
+
+    private IStatusQueue StatusQueue { get; } = statusQueue;
 
     private int TopPlayersLimit { get; }
         = configuration.GetValue<int?>("TopPlayersLimit") ?? 10;
@@ -57,6 +61,14 @@ public class GameService(
         game.Status = GameStatus.Active;
 
         await this.DbContext.SaveChangesAsync(cancellationToken);
+
+        await this.StatusQueue.EnqueueUpdateStatusAsync(
+            new GameEvent
+            {
+                GameId = game.Id,
+                Event = GameEventType.GameStarted
+            },
+            cancellationToken);
 
         this.Logger.LogInformation("Game started! [{handle}]", game.Handle);
 
@@ -117,7 +129,6 @@ public class GameService(
             throw new GuessAlreadySubmittedException(input.GameId, input.Guess);
         }
 
-
-        await GuessQueue.EnqueueGuessAsync(input, cancellationToken);
+        await this.GuessQueue.EnqueueGuessAsync(input, cancellationToken);
     }
 }
