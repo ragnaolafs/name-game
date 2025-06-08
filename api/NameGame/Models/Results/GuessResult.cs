@@ -6,4 +6,5 @@ public record GuessResult(
     string User,
     string Guess,
     double Score,
-    double ScorePercent);
+    double ScorePercent,
+    DateTime? Timestamp);

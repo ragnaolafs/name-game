@@ -87,7 +87,8 @@ public class GameBackgroundService(
             guess.User,
             guess.Guess,
             guess.Score,
-            guess.Score * 100);
+            guess.Score * 100,
+            guess.CreatedAt);
 
         if (guess.Score == 1)
         {

@@ -33,6 +33,23 @@ public class GameController : ControllerBase
         return this.Ok(game);
     }
 
+    [HttpGet("{id}/guesses")]
+    public async Task<IActionResult> GetGuessesAsync(
+        [FromRoute] string id,
+        [FromQuery] GetGuessesFilter? filter,
+        [FromServices] IGameService gameService,
+        CancellationToken cancellationToken)
+    {
+        filter ??= new GetGuessesFilter();
+
+        var guesses = await gameService.GetGuessesAsync(
+            id,
+            filter,
+            cancellationToken);
+
+        return this.Ok(guesses);
+    }
+
     [HttpGet("join/{handle}")]
     public async Task<IActionResult> JoinGameAsync(
         [FromRoute] string handle,

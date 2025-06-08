@@ -131,4 +131,25 @@ public class GameService(
 
         await this.GuessQueue.EnqueueGuessAsync(input, cancellationToken);
     }
+
+    public async Task<IEnumerable<GuessResult>> GetGuessesAsync(
+        string gameId,
+        GetGuessesFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var guesses = await this.DbContext.Guesses
+            .Where(g => g.GameId == gameId)
+            .OrderByDescending(g => g.CreatedAt)
+            .Take(filter.Limit)
+            .ToListAsync(cancellationToken);
+
+        return guesses.Select(g => new GuessResult(
+            g.Id,
+            g.GameId,
+            g.User,
+            g.Guess,
+            g.Score,
+            g.Score * 100,
+            g.CreatedAt));
+    }
 }
