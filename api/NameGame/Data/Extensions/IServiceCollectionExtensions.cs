@@ -9,11 +9,17 @@ public static class IServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // services.AddPooledDbContextFactory<NameGameDbContext>(o =>
-        //     configuration.GetConnectionString("NameGameDatabase"));
-
         services.AddDbContextFactory<NameGameDbContext>(opt =>
-            opt.UseNpgsql(configuration.GetConnectionString("NameGameDatabase")));
+        {
+            var connectionString = configuration.GetConnectionString("NameGameDatabase");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new Exception("Connection string for 'NameGameDatabase' is missing.");
+            }
+
+            opt.UseNpgsql(connectionString);
+        });
 
         return services;
     }
