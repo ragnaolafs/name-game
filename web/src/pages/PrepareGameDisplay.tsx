@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "@/config";
+import { API_URL } from "@/config";
 
 export default function PrepareGameDisplay() {
   const [gameCode, setGameCode] = useState("");
@@ -10,7 +10,7 @@ export default function PrepareGameDisplay() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${API_BASE_URL}/game/join/${gameCode}`, {
+      const response = await fetch(`${API_URL}/game/join/${gameCode}`, {
         method: "GET",
       });
 

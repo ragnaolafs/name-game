@@ -1,17 +1,38 @@
 // components/GuessStream.tsx
 import React from "react";
 import getScoreColor from "./ScoreColor";
+import { useGame } from "@/context/GameContext";
 
-type Props = {
-  guesses: { id: string; user: string; guess: string; scorePercent: number }[];
-};
+export default function GuessStream() {
+  const {
+    guesses: { data, isLoading, error },
+  } = useGame();
 
-export default function GuessStream({ guesses }: Props) {
+  const wrapperClass =
+    "bg-white rounded-xl shadow p-4 w-full max-w-xl max-h-60 overflow-y-auto";
+
+  if (error) {
+    console.error("Error loading guesses:", error);
+    return (
+      <div className={wrapperClass}>
+        <h2>Error loading guesses</h2>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className={wrapperClass}>
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-xl shadow p-4 w-full max-w-xl max-h-60 overflow-y-auto">
       <h2 className="text-xl font-semibold mb-2">Recent Guesses</h2>
       <ul className="space-y-1">
-        {guesses
+        {data
           .slice(-50)
           .reverse()
           .map(({ id, user, guess, scorePercent }) => (

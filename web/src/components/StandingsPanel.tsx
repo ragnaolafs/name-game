@@ -1,22 +1,37 @@
 // components/StandingsPanel.tsx
 import React from "react";
 import getScoreColor from "./ScoreColor";
+import { useGame } from "@/context/GameContext";
 
-type Props = {
-  standings: {
-    id: string;
-    user: string;
-    guess: string;
-    scorePercent: number;
-  }[];
-};
+export default function StandingsPanel() {
+  const {
+    standings: { data, isLoading, error },
+  } = useGame();
 
-export default function StandingsPanel({ standings }: Props) {
+  const wrapperClass = "bg-white rounded-xl shadow-lg p-4 w-full max-w-xl";
+
+  if (error) {
+    console.error("Error loading standings:", error);
+    return (
+      <div className={wrapperClass}>
+        <h2>Error loading standings</h2>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className={wrapperClass}>
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-lg p-4 w-full max-w-xl">
       <h2 className="text-xl font-semibold mb-2">Top Guesses</h2>
       <ul className="space-y-2">
-        {standings.map(({ id, user, guess, scorePercent }) => (
+        {data.topGuesses.map(({ id, user, guess, scorePercent }) => (
           <li
             key={id}
             className="flex justify-between items-center border-b border-gray-100 pb-1"
