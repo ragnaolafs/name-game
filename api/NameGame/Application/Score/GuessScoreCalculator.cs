@@ -1,21 +1,25 @@
+using NameGame.Models.Results;
+
 namespace NameGame.Application.Score;
 
 public static class GuessScoreCalculator
 {
-    public static double CalculateScore(string guess, string answer)
+    public static ScoreResult CalculateScore(string guess, string answer)
     {
         int distance = CalculateLevenshteinDistance(guess.ToLower(), answer.ToLower());
+
         int maxLength = Math.Max(guess.Length, answer.Length);
 
-        if (maxLength == 0)
-        {
-            return 1.0; // Both strings are empty, perfect match
-        }
+        var score = 1.0 - (double)distance / maxLength;
 
-        return 1.0 - (double)distance / maxLength;
+        var hintMatrix = GetHintMatrix(guess, answer);
+
+        return new ScoreResult(score, hintMatrix);
     }
 
-    public static int CalculateLevenshteinDistance(string source, string target)
+    public static int CalculateLevenshteinDistance(
+        string source,
+        string target)
     {
         if (string.IsNullOrEmpty(source))
         {
@@ -57,5 +61,37 @@ public static class GuessScoreCalculator
         }
 
         return distance[source.Length, target.Length];
+    }
+
+    private static List<int> GetHintMatrix(string guess, string answer)
+    {
+        var guessWords = guess.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var answerWords = answer.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        var wordHints = answerWords.Zip(guessWords, (a, g) =>
+        {
+            var matchesIndeces = new List<int>();
+
+            for (int i = 0; i < a.Length && i < g.Length; i++)
+            {
+                if (char.ToLower(a[i]) == char.ToLower(g[i]))
+                {
+                    matchesIndeces.Add(i);
+                }
+            }
+
+            return matchesIndeces;
+        });
+
+        var hintMatrix = new List<int>();
+
+        foreach (var hint in wordHints)
+        {
+            var offsetHint = hint.Select(i => i + hintMatrix.Count);
+
+            hintMatrix.AddRange(offsetHint);
+        }
+
+        return hintMatrix;
     }
 }

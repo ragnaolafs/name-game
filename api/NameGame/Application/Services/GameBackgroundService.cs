@@ -74,7 +74,7 @@ public class GameBackgroundService(
             GameId = game.Id,
             User = input.User,
             Guess = input.Guess,
-            Score = score
+            Score = score.Score
         };
 
         this.DbContext.Guesses.Add(guess);

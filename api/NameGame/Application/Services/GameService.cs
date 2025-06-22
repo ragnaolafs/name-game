@@ -47,7 +47,10 @@ public class GameService(
 
         this.Logger.LogInformation("New game created. Handle: {handle}", newgame.Handle);
 
-        return new CreateGameResult(newgame.Id, newgame.Status);
+        return new CreateGameResult(
+            newgame.Id,
+            newgame.Handle,
+            newgame.Status);
     }
 
     public async Task<StartGameResult> StartGameAsync(
