@@ -74,7 +74,8 @@ public class GameBackgroundService(
             GameId = game.Id,
             User = input.User,
             Guess = input.Guess,
-            Score = score.Score
+            Score = score.Score,
+            HintIndicesJson = score.HintsIndices,
         };
 
         this.DbContext.Guesses.Add(guess);
@@ -88,7 +89,8 @@ public class GameBackgroundService(
             guess.Guess,
             guess.Score,
             guess.Score * 100,
-            guess.CreatedAt);
+            guess.CreatedAt,
+            score.HintsIndices);
 
         if (guess.Score == 1)
         {

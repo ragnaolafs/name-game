@@ -14,6 +14,8 @@ public class GameEntity : ITimeStamps
 
     public required string Answer { get; set; }
 
+    public bool EnableHints { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

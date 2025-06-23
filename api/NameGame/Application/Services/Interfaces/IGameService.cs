@@ -25,7 +25,7 @@ public interface IGameService
         AddGuessInput input,
         CancellationToken cancellationToken);
 
-    Task<IEnumerable<GuessResult>> GetGuessesAsync(
+    Task<ICollection<GuessResult>> GetGuessesAsync(
         string gameId,
         GetGuessesFilter filter,
         CancellationToken cancellationToken);

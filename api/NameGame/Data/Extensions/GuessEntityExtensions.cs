@@ -23,7 +23,8 @@ public static class GuessEntityExtensions
                 g.Guess,
                 g.Score,
                 g.Score * 100,
-                g.CreatedAt))
+                g.CreatedAt,
+                g.HintIndicesJson))
             .ToListAsync(cancellationToken: cancellationToken);
 
         return new StandingsResult(gameId, topGuesses, DateTime.UtcNow);

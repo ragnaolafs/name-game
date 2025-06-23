@@ -7,4 +7,5 @@ public record GuessResult(
     string Guess,
     double Score,
     double ScorePercent,
-    DateTime? Timestamp);
+    DateTime? Timestamp,
+    List<int>? HintIndices);

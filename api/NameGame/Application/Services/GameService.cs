@@ -38,7 +38,10 @@ public class GameService(
         var newgame = new GameEntity
         {
             Answer = createGameRepuest.Answer,
-            Status = GameStatus.Setup
+            Status = createGameRepuest.StartNow
+                ? GameStatus.Active
+                : GameStatus.Setup,
+            EnableHints = createGameRepuest.EnableHints,
         };
 
         await this.DbContext.Games.AddAsync(newgame, cancellationToken);
@@ -135,7 +138,7 @@ public class GameService(
         await this.GuessQueue.EnqueueGuessAsync(input, cancellationToken);
     }
 
-    public async Task<IEnumerable<GuessResult>> GetGuessesAsync(
+    public async Task<ICollection<GuessResult>> GetGuessesAsync(
         string gameId,
         GetGuessesFilter filter,
         CancellationToken cancellationToken)
@@ -146,13 +149,14 @@ public class GameService(
             .Take(filter.Limit)
             .ToListAsync(cancellationToken);
 
-        return guesses.Select(g => new GuessResult(
+        return [.. guesses.Select(g => new GuessResult(
             g.Id,
             g.GameId,
             g.User,
             g.Guess,
             g.Score,
             g.Score * 100,
-            g.CreatedAt));
+            g.CreatedAt,
+            g.HintIndicesJson))];
     }
 }

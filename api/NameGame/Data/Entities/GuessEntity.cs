@@ -18,6 +18,8 @@ public class GuessEntity : ITimeStamps
     /// </summary>
     public double Score { get; set; }
 
+    public List<int>? HintIndicesJson { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NameGame.Data.Generators;
@@ -7,6 +8,12 @@ namespace NameGame.Data.Configurations;
 
 public class GuessConfiguration : IEntityTypeConfiguration<GuessEntity>
 {
+    private JsonSerializerOptions JsonSerializerOptions { get; } = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = false
+    };
+
     public void Configure(EntityTypeBuilder<GuessEntity> builder)
     {
         builder.HasKey(g => g.Id);
@@ -30,5 +37,12 @@ public class GuessConfiguration : IEntityTypeConfiguration<GuessEntity>
             .HasMaxLength(256);
 
         builder.HasIndex(g => g.Score);
+
+        builder
+            .Property(g => g.HintIndicesJson)
+            .HasColumnType("jsonb")
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, this.JsonSerializerOptions),
+                v => JsonSerializer.Deserialize<List<int>>(v, this.JsonSerializerOptions));
     }
 }
