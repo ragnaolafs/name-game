@@ -88,13 +88,16 @@ public static class GuessScoreCalculator
             }
 
             return matchesIndeces;
-        });
+        })
+        .ToList();
 
         var hintMatrix = new List<int>();
 
-        foreach (var hint in wordHints)
+        for (int i = 0; i < wordHints.Count; i++)
         {
-            var offsetHint = hint.Select(i => i + hintMatrix.Count);
+            var offset = i == 0 ? 0 : guessWords[i - 1].Length + 1; // +1 for the space
+
+            var offsetHint = wordHints[i].Select(index => index + offset);
 
             hintMatrix.AddRange(offsetHint);
         }
