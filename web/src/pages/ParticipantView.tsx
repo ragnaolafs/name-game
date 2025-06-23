@@ -53,8 +53,6 @@ export default function ParticipantView() {
     setGuess(`${shuffled[0]} ${shuffled[1]}`);
   }
 
-  // todo clear input on submit
-
   return (
     <GameProvider gameId={gameId}>
       <div className="flex flex-col items-center gap-4 p-6 min-h-screen bg-gradient-to-br from-green-100 to-blue-200">
@@ -69,7 +67,10 @@ export default function ParticipantView() {
             <GuessForm
               guess={guess}
               setGuess={setGuess}
-              onSubmit={() => submitGuess(gameId, username, guess)}
+              onSubmit={async () => {
+                await submitGuess(gameId, username, guess);
+                setGuess(""); // Clear input on submit
+              }}
             />
             <button
               type="button"

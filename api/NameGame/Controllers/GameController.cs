@@ -15,7 +15,6 @@ public class GameController : ControllerBase
         [FromServices] IGameService gameService,
         CancellationToken cancellationToken)
     {
-        // todo make this return game handle
         var game = await gameService.CreateGameAsync(
             createGameRepuest,
             cancellationToken);
