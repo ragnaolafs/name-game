@@ -10,9 +10,16 @@ public static class GuessScoreCalculator
 
         int maxLength = Math.Max(guess.Length, answer.Length);
 
-        var score = 1.0 - (double)distance / maxLength;
+        var distanceScore = 1.0 - (double)distance / maxLength;
 
+        // indexes of matching characters
         var hintMatrix = GetHintMatrix(guess, answer);
+
+        var hintScore = (double)hintMatrix.Count / (answer.Length - answer.Count(char.IsWhiteSpace));
+
+        // the distance score should be 70% of the total score
+        // the hint score should be 30% of the total score
+        double score = distanceScore * 0.7 + hintScore * 0.3;
 
         return new ScoreResult(score, hintMatrix);
     }
