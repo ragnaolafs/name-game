@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { API_URL } from "@/config";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import StandingsPanel from "@/components/StandingsPanel";
@@ -17,6 +17,21 @@ export default function ParticipantView() {
   }
   const [username, setUsername] = useLocalStorage("username", "");
   const [guess, setGuess] = useState("");
+  const namesListRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    async function loadNames() {
+      try {
+        const res = await fetch("/names.txt");
+        if (!res.ok) throw new Error("Failed to load names.txt");
+        const text = await res.text();
+        namesListRef.current = text.split(/\r?\n/).filter(Boolean);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    loadNames();
+  }, []);
 
   async function submitGuess(gameId: string, user: string, guess: string) {
     const res = await fetch(`${API_URL}/game/${gameId}/guess`, {
@@ -31,9 +46,14 @@ export default function ParticipantView() {
     }
   }
 
-  // todo clear input on submit
+  async function randomizeGuess() {
+    const names = namesListRef.current;
+    if (names.length < 2) return;
+    const shuffled = names.slice().sort(() => 0.5 - Math.random());
+    setGuess(`${shuffled[0]} ${shuffled[1]}`);
+  }
 
-  // todo implement random guesses
+  // todo clear input on submit
 
   return (
     <GameProvider gameId={gameId}>
@@ -51,6 +71,13 @@ export default function ParticipantView() {
               setGuess={setGuess}
               onSubmit={() => submitGuess(gameId, username, guess)}
             />
+            <button
+              type="button"
+              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={randomizeGuess}
+            >
+              Random
+            </button>
             <StandingsPanel />
             <GuessStream />
           </div>
