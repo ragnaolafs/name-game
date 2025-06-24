@@ -1,8 +1,8 @@
 // pages/GamePrompt.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { GameCodeInput } from "@/components/ui/GameCodeInput";
 import React from "react";
 import { API_URL } from "@/config";
 
@@ -38,11 +38,7 @@ export default function GamePrompt() {
     <div className="flex flex-col items-center justify-center min-h-screen gap-4 bg-gradient-to-br from-purple-100 to-orange-200">
       <h1 className="text-3xl font-bold">Enter Game Code</h1>
       <div className="flex gap-2">
-        <Input
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="game-code"
-        />
+        <GameCodeInput value={code} onChange={setCode} />
         <Button onClick={() => handleSubmit()}>Join</Button>
       </div>
     </div>

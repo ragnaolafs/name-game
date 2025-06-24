@@ -23,7 +23,7 @@ public static class GameEntityExtensions
         CancellationToken cancellationToken)
     {
         return await games.FirstOrDefaultAsync(
-            g => g.Handle == handle,
+            g => g.Handle == handle.ToLower(),
             cancellationToken)
             ?? throw new GameNotFoundException(handle);
     }
