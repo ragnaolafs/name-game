@@ -56,9 +56,6 @@ export default function GameStatus({ displayQR = false }: GameStatusProps) {
               value={`${window.location.origin}/play/${gameId}`}
               size={160}
             />
-            <div className="mt-2 text-xs text-gray-500">
-              Scan to join: /play/{gameId}
-            </div>
           </div>
         )}
       </div>
@@ -70,14 +67,13 @@ export default function GameStatus({ displayQR = false }: GameStatusProps) {
       {statusLabels[data.status] || `Status: ${data.status}`}
       {displayQR && gameId && (
         <div className="mt-4 flex flex-col items-center">
-          <div className="mb-2 text-base font-medium">Join this game:</div>
+          <div className="mb-2 text-base font-medium">
+            Game Code: {data.gameHandle}
+          </div>
           <QRCode
             value={`${window.location.origin}/play/${gameId}`}
             size={120}
           />
-          <div className="mt-2 text-xs text-gray-500">
-            Scan to join: /play/{gameId}
-          </div>
         </div>
       )}
     </div>

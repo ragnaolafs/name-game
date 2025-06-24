@@ -19,7 +19,6 @@ export default function ParticipantView() {
   return (
     <GameProvider gameId={gameId}>
       <div className="flex flex-col items-center gap-4 p-6 min-h-screen bg-gradient-to-br from-green-100 to-blue-200">
-        <h1 className="text-2xl font-bold">Join Game: {gameId}</h1>
         <GameStatus />
         {!username ? (
           <UsernameForm onSubmit={setUsername} />

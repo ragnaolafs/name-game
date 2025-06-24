@@ -5,6 +5,7 @@ import { API_URL, WS_URL } from '@/config';
 
 type GameStatusResult = {
     status: string;
+    gameHandle: string;
     winner?: WinnerResult;
 }
 
