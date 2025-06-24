@@ -16,6 +16,7 @@ export function useGameData(gameId: string) {
     } = useGuessStream(gameId);
 
     return {
+        gameId,
         status: {
             data: status,
             isLoading: loadingStatus,

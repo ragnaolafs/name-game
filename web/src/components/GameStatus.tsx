@@ -1,6 +1,7 @@
 import { useGame } from "@/context/GameContext";
 import React from "react";
 import Confetti from "react-confetti";
+import { QRCode } from "./QRCode";
 
 const statusLabels: Record<string, string> = {
   Setup: "Waiting for game to start...",
@@ -8,8 +9,12 @@ const statusLabels: Record<string, string> = {
   Finished: "Game finished!",
 };
 
-export default function GameStatus() {
-  const { status } = useGame();
+interface GameStatusProps {
+  displayQR?: boolean;
+}
+
+export default function GameStatus({ displayQR = false }: GameStatusProps) {
+  const { status, gameId } = useGame();
   const { data, isLoading, error } = status;
 
   if (isLoading) return <div className="text-gray-500">Loading status...</div>;
@@ -29,13 +34,37 @@ export default function GameStatus() {
           <span className="underline">{data.winner.answer}</span>
         </div>
         <div className="text-xl text-gray-700 mt-4">Game finished!</div>
+        {displayQR && gameId && (
+          <div className="mt-6 flex flex-col items-center">
+            <div className="mb-2 text-lg font-medium">Join this game:</div>
+            <QRCode
+              value={`${window.location.origin}/play/${gameId}`}
+              size={160}
+            />
+            <div className="mt-2 text-xs text-gray-500">
+              Scan to join: /play/{gameId}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="text-lg font-semibold">
+    <div className="text-lg font-semibold flex flex-col items-center">
       {statusLabels[data.status] || `Status: ${data.status}`}
+      {displayQR && gameId && (
+        <div className="mt-4 flex flex-col items-center">
+          <div className="mb-2 text-base font-medium">Join this game:</div>
+          <QRCode
+            value={`${window.location.origin}/play/${gameId}`}
+            size={120}
+          />
+          <div className="mt-2 text-xs text-gray-500">
+            Scan to join: /play/{gameId}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
