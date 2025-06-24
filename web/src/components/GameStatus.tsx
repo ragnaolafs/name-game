@@ -25,7 +25,7 @@ export default function GameStatus({ displayQR = false }: GameStatusProps) {
   if (data.status === "Finished" && data.winner) {
     return (
       <div className="relative flex flex-col items-center justify-center py-12">
-        <Confetti numberOfPieces={400} recycle={false} />
+        <Confetti numberOfPieces={400} recycle={true} />
         <div className="text-5xl font-extrabold text-green-600 drop-shadow mb-4 animate-bounce">
           🎉 Winner: {data.winner.winner} 🎉
         </div>

@@ -19,7 +19,7 @@ export function useGameStatus(gameId: string) {
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        axios.get(`${API_URL}/game/${gameId}`)
+        axios.get(`${API_URL}/game/${gameId}/status`)
             .then(res => {
                 setStatus(res.data);
                 setLoading(false);
