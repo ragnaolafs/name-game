@@ -6,10 +6,11 @@ import React from "react";
 
 type Props = {
   onSubmit: (name: string) => void;
+  initialValue?: string;
 };
 
-export default function UsernameForm({ onSubmit }: Props) {
-  const [name, setName] = useState("");
+export default function UsernameForm({ onSubmit, initialValue = "" }: Props) {
+  const [name, setName] = useState(initialValue);
 
   return (
     <form
