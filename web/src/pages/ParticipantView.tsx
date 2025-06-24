@@ -18,20 +18,22 @@ export default function ParticipantView() {
 
   return (
     <GameProvider gameId={gameId}>
-      <div className="flex flex-col items-center gap-4 p-6 min-h-screen bg-gradient-to-br from-green-100 to-blue-200">
-        <GameStatus />
-        {!username ? (
-          <UsernameForm onSubmit={setUsername} />
-        ) : (
-          <div className="w-full max-w-md space-y-4">
-            <p className="text-lg">
-              Hello, <strong>{username}</strong>
-            </p>
-            <GuessForm gameId={gameId} username={username} />
-            <StandingsPanel />
-            <GuessStream />
-          </div>
-        )}
+      <div className="flex flex-col items-center gap-4 p-2 min-h-screen bg-gradient-to-br from-green-100 to-blue-200 sm:p-6">
+        <div className="w-full max-w-full sm:max-w-md space-y-4 px-0 sm:px-0">
+          <GameStatus />
+          {!username ? (
+            <UsernameForm onSubmit={setUsername} />
+          ) : (
+            <div className="w-full space-y-4">
+              <p className="text-lg text-center">
+                Hello, <strong>{username}</strong>
+              </p>
+              <StandingsPanel />
+              <GuessStream />
+              <GuessForm gameId={gameId} username={username} />
+            </div>
+          )}
+        </div>
       </div>
     </GameProvider>
   );
