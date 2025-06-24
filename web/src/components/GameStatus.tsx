@@ -62,9 +62,22 @@ export default function GameStatus({ displayQR = false }: GameStatusProps) {
     );
   }
 
+  // Animations for Setup and Active states
+  let statusClass = "";
+  const text = statusLabels[data.status] || `Status: ${data.status}`;
+  if (data.status === "Setup") {
+    statusClass =
+      "animate-pulse text-xl font-bold text-blue-500 drop-shadow flex flex-col items-center text-center";
+  } else if (data.status === "Active") {
+    statusClass =
+      "animate-pop text-2xl font-extrabold text-green-500 drop-shadow-lg flex flex-col items-center";
+  } else {
+    statusClass = "text-lg font-semibold flex flex-col items-center";
+  }
+
   return (
-    <div className="text-lg font-semibold flex flex-col items-center">
-      {statusLabels[data.status] || `Status: ${data.status}`}
+    <div className={statusClass + " flex flex-col items-center"}>
+      {text}
       {displayQR && gameId && (
         <div className="mt-4 flex flex-col items-center">
           <div className="mb-2 text-base font-medium">
@@ -79,3 +92,16 @@ export default function GameStatus({ displayQR = false }: GameStatusProps) {
     </div>
   );
 }
+
+// Add custom pop animation for Active state
+// Add this to your global CSS (e.g., index.css or tailwind.config if using Tailwind)
+// @layer utilities {
+//   .animate-pop {
+//     animation: pop 1s cubic-bezier(0.23, 1, 0.32, 1) infinite alternate;
+//   }
+//   @keyframes pop {
+//     0% { transform: scale(1); }
+//     50% { transform: scale(1.12) rotate(-2deg); }
+//     100% { transform: scale(1.05) rotate(2deg); }
+//   }
+// }
