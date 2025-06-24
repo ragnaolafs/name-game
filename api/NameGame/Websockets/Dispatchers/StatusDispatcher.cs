@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using NameGame.Models.Results;
 using NameGame.Websockets.Dispatchers.Interfaces;
 
@@ -19,6 +20,7 @@ public class StatusDispatcher(
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = true,
+            Converters = { new JsonStringEnumConverter() }
         };
 
     public async Task PublishGameStatusAsync(GameStatusResult status, CancellationToken cancellationToken)

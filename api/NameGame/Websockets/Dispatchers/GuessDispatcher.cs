@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using NameGame.Models.Results;
 
 namespace NameGame.Websockets.Dispatchers;
@@ -19,6 +20,7 @@ public class GuessDispatcher(
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = true,
+            Converters = { new JsonStringEnumConverter() }
         };
 
     public async Task PublishGuessAsync(
