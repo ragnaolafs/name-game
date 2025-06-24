@@ -1,6 +1,7 @@
 import { useGame } from "@/context/GameContext";
 import React from "react";
 import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 import { QRCode } from "./QRCode";
 
 const statusLabels: Record<string, string> = {
@@ -21,11 +22,25 @@ export default function GameStatus({ displayQR = false }: GameStatusProps) {
   if (error) return <div className="text-red-500">Error loading status</div>;
   if (!status) return <div className="text-gray-500">No status available</div>;
 
+  const { width, height } = useWindowSize();
+
   // Handle Finished state with winner and answer
   if (data.status === "Finished" && data.winner) {
     return (
       <div className="relative flex flex-col items-center justify-center py-12">
-        <Confetti numberOfPieces={400} recycle={true} />
+        <Confetti
+          numberOfPieces={400}
+          recycle={true}
+          width={width}
+          height={height}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            pointerEvents: "none",
+            zIndex: 50,
+          }}
+        />
         <div className="text-5xl font-extrabold text-green-600 drop-shadow mb-4 animate-bounce">
           🎉 Winner: {data.winner.winner} 🎉
         </div>
