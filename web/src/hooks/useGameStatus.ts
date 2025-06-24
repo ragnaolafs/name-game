@@ -3,15 +3,25 @@ import axios from 'axios';
 import { useWebSocket } from './useWebSocket';
 import { API_URL, WS_URL } from '@/config';
 
+type GameStatusResult = {
+    status: string;
+    winner?: WinnerResult;
+}
+
+type WinnerResult = {
+    winner: string;
+    answer: string;
+};
+
 export function useGameStatus(gameId: string) {
-    const [status, setStatus] = useState<string | null>(null);
+    const [status, setStatus] = useState<GameStatusResult | null>(null);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
         axios.get(`${API_URL}/game/${gameId}`)
             .then(res => {
-                setStatus(res.data.status);
+                setStatus(res.data);
                 setLoading(false);
             })
             .catch(err => {
@@ -21,7 +31,7 @@ export function useGameStatus(gameId: string) {
     }, [gameId]);
 
     useWebSocket(`${WS_URL}/game/${gameId}/status`, (data) => {
-        if (data.status) setStatus(data.status);
+        if (data) setStatus(data);
     });
 
     return { status, isLoading, error };

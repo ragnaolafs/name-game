@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import React, { useRef, useEffect, useState } from "react";
 import { API_URL } from "@/config";
+import { useGame } from "@/context/GameContext";
 
 // Props now include gameId and username
 interface GuessFormProps {
@@ -19,6 +20,9 @@ export default function GuessForm({
   const [guess, setGuess] = useState("");
   const [namesList, setNamesList] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { status } = useGame();
+  const { data, isLoading } = status;
 
   // Load names.txt once
   useEffect(() => {
@@ -64,6 +68,8 @@ export default function GuessForm({
     setGuess(`${shuffled[0]} ${shuffled[1]}`);
   }
 
+  const disabled = isLoading || !data || data.status !== "Active";
+
   return (
     <form
       onSubmit={(e) => {
@@ -78,15 +84,19 @@ export default function GuessForm({
         onChange={(e) => setGuess(e.target.value)}
         placeholder="Your guess"
         className="flex-1"
+        disabled={disabled}
       />
       <Button
         type="button"
         className="bg-blue-500 text-white hover:bg-blue-600"
         onClick={randomizeGuess}
+        disabled={disabled}
       >
         Random
       </Button>
-      <Button type="submit">Guess</Button>
+      <Button type="submit" disabled={disabled}>
+        Guess
+      </Button>
     </form>
   );
 }

@@ -6,6 +6,7 @@ import GuessStream from "@/components/GuessStream";
 import UsernameForm from "@/components/UsernameForm";
 import GuessForm from "@/components/GuessForm";
 import { GameProvider } from "@/context/GameContext";
+import GameStatus from "@/components/GameStatus";
 
 export default function ParticipantView() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -19,6 +20,7 @@ export default function ParticipantView() {
     <GameProvider gameId={gameId}>
       <div className="flex flex-col items-center gap-4 p-6 min-h-screen bg-gradient-to-br from-green-100 to-blue-200">
         <h1 className="text-2xl font-bold">Join Game: {gameId}</h1>
+        <GameStatus />
         {!username ? (
           <UsernameForm onSubmit={setUsername} />
         ) : (

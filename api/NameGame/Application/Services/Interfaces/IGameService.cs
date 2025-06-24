@@ -29,4 +29,8 @@ public interface IGameService
         string gameId,
         GetGuessesFilter filter,
         CancellationToken cancellationToken);
+
+    Task<GameStatusResult> GetGameStatusAsync(
+        string id,
+        CancellationToken cancellationToken);
 }

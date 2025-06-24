@@ -159,4 +159,33 @@ public class GameService(
             g.CreatedAt,
             g.HintIndicesJson))];
     }
+
+    public async Task<GameStatusResult> GetGameStatusAsync(
+        string id,
+        CancellationToken cancellationToken)
+    {
+        var game = await this.DbContext.Games.GetGameByIdAsync(id, cancellationToken);
+
+        WinnerResult? winner = null;
+
+        if (game.Status != GameStatus.Finished)
+        {
+            return new GameStatusResult(game.Id, game.Status, winner);
+        }
+
+        var topGuess = await this.DbContext.Guesses
+            .Where(g => g.GameId == id && g.Score == 1)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (topGuess == null)
+        {
+            this.Logger.LogWarning("Game is finished but no top guess found. Game ID: {gameId}", id);
+
+            return new GameStatusResult(game.Id, game.Status, winner);
+        }
+
+        winner = new WinnerResult(topGuess.User, game.Answer);
+
+        return new GameStatusResult(game.Id, game.Status, winner);
+    }
 }
