@@ -10,19 +10,15 @@ export default function GameDisplay() {
 
   return (
     <GameProvider gameId={gameId}>
-      <div className="flex flex-col items-center justify-center gap-12 p-6 min-h-screen bg-gradient-to-br from-yellow-100 to-pink-200 w-full max-w-none">
-        <div className="w-full flex justify-center mb-8">
-          <div className="w-full max-w-2xl">
+      <div className="flex flex-col md:flex-row items-stretch justify-center gap-12 p-6 max-h-screen bg-gradient-to-br from-yellow-100 to-pink-200 w-full max-w-none">
+        <div className="flex flex-col gap-12 md:w-1/2 w-full max-w-xl justify-start">
+          <div className="w-full max-w-2xl mb-8">
             <GameStatus displayQR={true} />
           </div>
+          <StandingsPanel />
         </div>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 w-full">
-          <div className="flex flex-col gap-12 md:w-1/2 w-full max-w-xl">
-            <StandingsPanel />
-          </div>
-          <div className="md:w-1/2 w-full flex max-w-xl">
-            <GuessStream />
-          </div>
+        <div className="md:w-1/2 w-full flex max-w-none h-auto max-h-full">
+          <GuessStream />
         </div>
       </div>
     </GameProvider>

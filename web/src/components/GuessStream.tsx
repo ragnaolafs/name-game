@@ -9,7 +9,7 @@ export default function GuessStream() {
   } = useGame();
 
   const wrapperClass =
-    "bg-white rounded-xl shadow p-4 w-full max-w-xl max-h-60 overflow-y-auto";
+    "bg-white rounded-xl shadow p-4 w-full max-w-xl max-h-full overflow-y-hidden";
 
   if (error) {
     console.error("Error loading guesses:", error);
@@ -29,19 +29,21 @@ export default function GuessStream() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow p-4 w-full max-w-xl max-h-60 overflow-y-auto">
+    <div className={wrapperClass}>
       <h2 className="text-xl font-semibold mb-2">Recent Guesses</h2>
       <ul className="space-y-1">
-        {data.slice(-50).map(({ id, user, guess, scorePercent }) => (
-          <li key={id} className="text-sm flex justify-between">
-            <span>
-              <strong>{user}</strong>: {guess}
-            </span>
-            <span className={`font-semibold ${getScoreColor(scorePercent)}`}>
-              {scorePercent.toFixed(2)}%
-            </span>
-          </li>
-        ))}
+        {[...data.slice(-50)]
+          .reverse()
+          .map(({ id, user, guess, scorePercent }) => (
+            <li key={id} className="text-sm flex justify-between">
+              <span>
+                <strong>{user}</strong>: {guess}
+              </span>
+              <span className={`font-semibold ${getScoreColor(scorePercent)}`}>
+                {scorePercent.toFixed(2)}%
+              </span>
+            </li>
+          ))}
       </ul>
     </div>
   );
