@@ -44,6 +44,14 @@ public class GameController : ControllerBase
         return this.Ok(gameStatus);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetGamesAsync(
+        [FromServices] IGameService gameService,
+        CancellationToken cancellationToken)
+    {
+        return this.Ok("hello");
+    }
+
     [HttpGet("{id}/guesses")]
     public async Task<IActionResult> GetGuessesAsync(
         [FromRoute] string id,
